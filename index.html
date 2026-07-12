@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">Резюме</title>
+  <meta name="description" content="Одностраничное резюме backend-разработчика">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="page-topbar">
+    <div class="section-inner topbar-inner">
+      <div class="header-controls">
+        <div class="language-switcher" id="language-switcher" role="group">
+          <button type="button" class="language-button" id="language-button-ru" data-lang="ru" aria-pressed="true">RU</button>
+          <button type="button" class="language-button" id="language-button-en" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button type="button" class="theme-toggle-button" id="theme-toggle-button">
+          <span class="theme-toggle-icon" id="theme-toggle-icon" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="hero-avatar-wrapper">
+        <img class="hero-avatar" src="assets/avatar-placeholder.svg" alt="" id="hero-avatar-image">
+      </div>
+      <h1 class="hero-name" id="hero-name"></h1>
+      <p class="hero-role" id="hero-role"></p>
+      <ul class="contact-list" id="contact-list"></ul>
+
+      <div class="sidebar-section">
+        <h2 class="section-title" id="skills-title"></h2>
+        <div class="skills-grid" id="skills-grid"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="section-title" id="languages-title"></h2>
+        <ul class="languages-list" id="languages-list"></ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section class="about-section" id="about-section" aria-labelledby="about-title">
+        <h2 class="section-title" id="about-title"></h2>
+        <p class="about-text" id="about-text"></p>
+      </section>
+
+      <section class="education-section" id="education-section" aria-labelledby="education-title">
+        <h2 class="section-title" id="education-title"></h2>
+        <ol class="experience-timeline" id="education-timeline"></ol>
+      </section>
+
+      <section class="experience-section" id="experience-section" aria-labelledby="experience-title">
+        <h2 class="section-title" id="experience-title"></h2>
+        <ol class="experience-timeline" id="experience-timeline"></ol>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="section-inner">
+      <ul class="footer-contact-list" id="footer-contact-list"></ul>
+      <p class="footer-copyright" id="footer-copyright"></p>
+    </div>
+  </footer>
+
+  <script src="js/icons.js"></script>
+  <script src="js/content_ru.js"></script>
+  <script src="js/content_en.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
