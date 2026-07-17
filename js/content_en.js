@@ -5,32 +5,32 @@
  */
 const contentEn = {
   meta: {
-    pageTitle: 'Ivan Ivanov — Backend Developer | Resume'
+    pageTitle: 'Igor Chestnov — Software Engineer | Resume'
   },
   hero: {
-    name: 'Ivan Ivanov',
+    name: 'Igor Chestnov',
     role: 'Software Engineer',
     avatarAlt: 'Profile avatar placeholder',
     contacts: {
       telegram: {
         label: 'Telegram',
-        value: 'ivan_ivanov_dev',
-        href: 'https://t.me/ivan_ivanov_dev'
+        value: 'inchestnov',
+        href: 'https://t.me/inchestnov'
       },
       linkedin: {
         label: 'LinkedIn',
-        value: 'ivan-ivanov-dev',
-        href: 'https://linkedin.com/in/ivan-ivanov-dev'
+        value: 'igor-chestnov',
+        href: 'https://linkedin.com/in/igor-chestnov'
       },
       github: {
         label: 'GitHub',
-        value: 'ivan-ivanov-dev',
-        href: 'https://github.com/ivan-ivanov-dev'
+        value: 'inchestnov',
+        href: 'https://github.com/inchestnov'
       },
       email: {
         label: 'Email',
-        value: 'ivan.ivanov.dev@example.com',
-        href: 'mailto:ivan.ivanov.dev@example.com'
+        value: 'inchestnov@gmail.com',
+        href: 'mailto:inchestnov@gmail.com'
       }
     }
   },
@@ -52,74 +52,96 @@ const contentEn = {
     ]
   },
   about: {
-    text: 'Backend developer with 5+ years of experience building reliable, high-load systems in Java and Go, specializing in microservices, Kafka, and PostgreSQL. I have worked in fintech and at a stock exchange — I enjoy tackling complex technical problems and I am always open to learning new technologies.'
+    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
   },
   experience: {
     title: 'Work Experience',
     jobs: [
       {
         company: 'Ozon Fintech',
-        role: 'Senior Backend Developer',
+        role: 'Principal Software Engineer',
         period: 'December 2023 — Present',
         points: [
-          'Develop and maintain high-load microservices for the payments platform in Java and Go.',
-          'Design asynchronous service integration via Kafka, reducing transaction processing time.',
-          'Introduce observability practices and take part in architectural review sessions.',
-          'Automate service deployment on Kubernetes, speeding up the release cycle.'
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          'Nisi ut aliquip ex ea commodo consequat duis aute irure dolor.'
         ]
       },
       {
         company: 'Moscow Exchange (MOEX)',
-        role: 'Backend Developer',
+        role: 'Senior Java Developer',
         period: 'October 2021 — December 2023',
         points: [
-          'Built components of trading and clearing systems using Java and Spring.',
-          'Optimized PostgreSQL interactions, improving query throughput.',
-          'Took part in designing event-driven integrations between internal systems via Kafka.',
-          'Conducted code reviews and introduced code quality standards within the team.'
+          'In reprehenderit in voluptate velit esse cillum dolore eu fugiat.',
+          'Nulla pariatur excepteur sint occaecat cupidatat non proident.',
+          'Sunt in culpa qui officia deserunt mollit anim id est laborum.',
+          'Curabitur pretium tincidunt lacus nulla gravida orci a odio.'
         ]
       },
       {
         company: 'Haulmont',
-        role: 'Backend Developer',
+        role: 'Java Developer',
         period: 'January 2020 — October 2021',
         points: [
-          'Developed business applications in Java and Spring for enterprise clients.',
-          'Designed data schemas and optimized PostgreSQL queries.',
-          'Wrote automated tests and helped set up CI processes.',
-          'Collaborated with clients to clarify functional requirements.'
+          'Nullam varius turpis et commodo pharetra est eros bibendum elit.',
+          'Nec luctus magna felis sollicitudin mauris integer in mauris.',
+          'Eu nibh euismod gravida duis ac tellus et risus vulputate.',
+          'Vehicula donec lobortis risus a elit etiam tempor ut ullamcorper.'
         ]
       }
     ]
   },
   education: {
     period: 'September 2015 — June 2020',
-    institution: 'Bauman Moscow State Technical University',
-    degree: 'Computer Science and Engineering, Specialist Degree',
-    description: 'Specialized in distributed systems and databases; thesis focused on designing fault-tolerant data storage architectures.'
+    institution: 'Samara University',
+    degree: 'Fundamental Mathematics and Mechanics',
+    description: 'Ligula eu tempor congue eros est euismod turpis id tincidunt sapien risus.'
   },
   roadmap: {
     title: 'Technology Stack',
     groups: [
       {
         name: 'Languages',
-        items: ['Java', 'Go', 'Python']
+        items: [
+          { id: 'java', name: 'Java' },
+          { id: 'go', name: 'Go' },
+          { id: 'python', name: 'Python' }
+        ]
       },
       {
         name: 'Tools',
-        items: ['Spring', 'Spring Boot', 'Maven', 'Gradle', 'Git', 'Vim', 'Claude Code']
+        items: [
+          { id: 'spring', name: 'Spring' },
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'maven', name: 'Maven' },
+          { id: 'gradle', name: 'Gradle' },
+          { id: 'git', name: 'Git' },
+          { id: 'vim', name: 'Vim' },
+          { id: 'claude-code', name: 'Claude Code' }
+        ]
       },
       {
         name: 'Deploy',
-        items: ['Docker', 'Kubernetes', 'GitLab', 'GitHub', 'Linux']
+        items: [
+          { id: 'docker', name: 'Docker' },
+          { id: 'kubernetes', name: 'Kubernetes' },
+          { id: 'gitlab', name: 'GitLab' },
+          { id: 'github', name: 'GitHub' },
+          { id: 'linux', name: 'Linux' }
+        ]
       },
       {
         name: 'Databases',
-        items: ['PostgreSQL', 'Kafka', 'Apache ActiveMQ']
+        items: [
+          { id: 'postgresql', name: 'PostgreSQL' },
+          { id: 'kafka', name: 'Kafka' },
+          { id: 'activemq', name: 'Apache ActiveMQ' }
+        ]
       }
     ]
   },
   footer: {
-    copyrightText: '© {year} Ivan Ivanov. All rights reserved.'
+    copyrightText: '© {year} Igor Chestnov. All rights reserved.'
   }
 };

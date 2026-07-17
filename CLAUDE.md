@@ -25,11 +25,12 @@ resume/
 │                          colors — they only reference the variables.
 ├── js/
 │   ├── icons.js           `iconMarkup` — a map of inline SVG strings used for
-│   │                       skill and contact icons. Brand icons are copied
-│   │                       verbatim from the matching file in assets/icons/
-│   │                       (see below); email is hand-authored (not a brand
-│   │                       mark). No CDN icon fonts/sprites are used, so
-│   │                       icons render identically offline via file://.
+│   │                       skill, contact, and roadmap icons. Brand icons are
+│   │                       copied verbatim from the matching file in
+│   │                       assets/icons/ (see below); email is hand-authored
+│   │                       (not a brand mark). No CDN icon fonts/sprites are
+│   │                       used, so icons render identically offline via
+│   │                       file://.
 │   ├── content_ru.js       `contentRu` — Russian copy (default language).
 │   ├── content_en.js       `contentEn` — English copy.
 │   └── main.js             App logic: language switching, localStorage
@@ -39,13 +40,15 @@ resume/
 ├── assets/
 │   ├── avatar-placeholder.svg   Placeholder avatar (silhouette).
 │   └── icons/              Saved copies of the official brand SVGs (java,
-│                            spring, go, kafka, postgresql, kubernetes,
-│                            telegram, linkedin, github) as downloaded from
-│                            Simple Icons (simpleicons.org, CC0). Kept here
-│                            as the source-of-truth reference copy; the
-│                            actual on-page markup lives inline in
-│                            `js/icons.js` (see below) since <img> tags can't
-│                            be recolored via CSS `currentColor`.
+│                            spring, spring-boot, go, python, maven, gradle,
+│                            git, vim, claude-code, docker, kubernetes,
+│                            gitlab, linux, kafka, postgresql, telegram,
+│                            linkedin, github) as downloaded from Simple
+│                            Icons (simpleicons.org, CC0). Kept here as the
+│                            source-of-truth reference copy; the actual
+│                            on-page markup lives inline in `js/icons.js`
+│                            (see below) since <img> tags can't be recolored
+│                            via CSS `currentColor`.
 ├── requirements.md         Original project brief (reference only).
 └── CLAUDE.md               This file.
 ```
@@ -197,45 +200,80 @@ give it a `jobs`-style array and loop over it the same way jobs are looped.
 
 ## 8. Roadmap (tech-stack diagram)
 
-`.roadmap-section` renders a flat, icon-free "roadmap style" diagram of
-technologies grouped into categories — a horizontal row of category columns
-on desktop, joined by a connecting line across each column's marker dot
-(`.roadmap::before` + `.roadmap-group-marker`), with each column's items
-shown as boxes (`.roadmap-node`) connected by their own vertical line
+`.roadmap-section` renders a "roadmap style" diagram of technologies grouped
+into categories — a horizontal row of category columns on desktop, joined by
+a connecting line across each column's marker dot (`.roadmap::before` +
+`.roadmap-group-marker`), with each column's items shown as icon+name boxes
+(`.roadmap-node`) connected by their own vertical line
 (`.roadmap-nodes::before`). Below 900px it drops to 2 columns and below
 600px to 1, and the horizontal top connector is hidden at both those
 breakpoints since it only reads correctly as a single row.
 
 Defined per-language inside `content_ru.js` / `content_en.js` under
-`roadmap.groups`, an array of `{ name, items }` where `items` is a flat
-array of plain label strings (no icon ids — this diagram is intentionally
-text-only, unlike the Skills banner):
+`roadmap.groups`, an array of `{ name, items }` where `items` is an array of
+`{ id, name }` (the `id` looks up the matching entry in `iconMarkup` from
+`js/icons.js`, same convention as the Skills banner):
 
 ```js
 {
   name: 'Category name',
-  items: ['Tech A', 'Tech B', ...]
+  items: [{ id: 'tech-a', name: 'Tech A' }, { id: 'tech-b', name: 'Tech B' }, ...]
 }
 ```
 
 `renderRoadmap()` in `main.js` builds one `.roadmap-group` per entry (marker
-dot + title + `.roadmap-nodes` list of `.roadmap-node` boxes). **To add or
-change a category/technology:** edit the `groups` array in *both*
-`content_ru.js` and `content_en.js` (keep both files and the category
-order in sync) — no HTML or CSS changes are required.
+dot + title + `.roadmap-nodes` list of `.roadmap-node` boxes, each an icon +
+name pair). If `iconMarkup[item.id]` has no matching entry, the node renders
+name-only rather than a missing/incorrect icon (a safety net for future
+additions, not currently exercised by any roadmap item — see §9 for the
+`activemq` case, which *does* have an icon, just not from Simple Icons).
+**To add or change a category/technology:** edit the `groups` array in
+*both* `content_ru.js` and `content_en.js` (keep both files and the category
+order in sync), and add a matching entry to `iconMarkup` in `js/icons.js`
+if a brand icon is available (see §9) — no other HTML or CSS changes are
+required.
 
 ## 9. Icon assets
 
-- Brand icons (java, spring, go, kafka, postgresql, kubernetes, telegram,
-  linkedin, github) are official marks from Simple Icons (CC0), saved as
-  individual files in `assets/icons/*.svg` and copied inline into
-  `iconMarkup` in `js/icons.js`.
+- Brand icons (java, spring, spring-boot, go, python, maven, gradle, git,
+  vim, claude-code, docker, kubernetes, gitlab, linux, kafka, postgresql,
+  telegram, linkedin, github) are official marks from Simple Icons (CC0),
+  saved as individual files in `assets/icons/*.svg` and copied inline into
+  `iconMarkup` in `js/icons.js`. `iconMarkup` keys that aren't valid bare
+  JS identifiers (contain a hyphen, e.g. `spring-boot`, `claude-code`) are
+  quoted string keys — everything else follows normal object-literal syntax.
+- `activemq` is the one exception to the Simple Icons rule: Apache ActiveMQ
+  has no entry there (checked both "ActiveMQ" and "Apache Artemis" — neither
+  exists; only the generic, non-product-specific Apache Software Foundation
+  feather logo does, which was deliberately *not* used since it isn't
+  ActiveMQ-specific). Instead `iconMarkup.activemq` holds the official
+  ActiveMQ "flower" symbol, cropped out of the full logo (source: the
+  official logo asset, which also carries an "Apache ACTIVE MQ" wordmark —
+  that text was removed since it would duplicate the adjacent
+  `.roadmap-node-name` label; the crop's `viewBox` was computed from the
+  retained elements' actual coordinates, not eyeballed), with `viewBox`
+  portrait rather than square, so it letterboxes inside the (square)
+  `.roadmap-node-icon` box instead of filling it edge-to-edge. Its five
+  petals **do** use `fill="currentColor"` (recolored to the site's blue
+  accent, like every other icon), but the white connector dots/lines stay
+  literal `#fff` — coloring everything the same blue would make the whole
+  glyph collapse into an indistinct blob, since the dots/lines only read as
+  a shape by contrasting against the petals.
+  `assets/icons/activemq.svg` is the one case where the reference copy
+  **intentionally does not match** `iconMarkup.activemq` exactly: it keeps
+  the original five official brand colors on the petals (the true
+  source-of-truth for what the logo actually looks like), while the inline
+  version in `js/icons.js` carries the site-specific blue recolor. If
+  ActiveMQ is ever dropped from the roadmap, remove both files together;
+  don't leave one without the other.
 - The `<path>` data must match `assets/icons/*.svg` exactly — always copy the
   saved file's contents rather than retyping it, so the glyph stays pixel
   accurate to the source. Each is wrapped as
   `<svg viewBox="0 0 24 24" fill="currentColor" ...>` (no `fill` attribute on
   the `<path>` itself) so the icon inherits the surrounding text color and
-  recolors correctly via CSS (e.g. on hover).
+  recolors correctly via CSS (e.g. on hover). This rule is about geometry,
+  not necessarily fill color — `activemq` is the one deliberate exception
+  where inline fill colors diverge from the reference file (see above).
 - **To update or add a brand icon:** download the official SVG (e.g. from
   `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/<slug>.svg`), save
   it as `assets/icons/<name>.svg`, then copy its `<path>` markup into the

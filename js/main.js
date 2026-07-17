@@ -147,7 +147,11 @@ function renderRoadmap(roadmapGroups) {
     groupElement.className = 'roadmap-group';
 
     const nodesMarkup = group.items
-      .map(function (item) { return '<li class="roadmap-node">' + item + '</li>'; })
+      .map(function (item) {
+        const iconSvg = iconMarkup[item.id];
+        const iconHtml = iconSvg ? '<span class="roadmap-node-icon">' + iconSvg + '</span>' : '';
+        return '<li class="roadmap-node">' + iconHtml + '<span class="roadmap-node-name">' + item.name + '</span></li>';
+      })
       .join('');
 
     groupElement.innerHTML =
