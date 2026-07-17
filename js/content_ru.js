@@ -9,7 +9,7 @@ const contentRu = {
   },
   hero: {
     name: 'Иван Иванов',
-    role: 'Backend-разработчик · Java & Go',
+    role: 'Software Engineer',
     avatarAlt: 'Аватар-заглушка профиля',
     contacts: {
       telegram: {
@@ -34,22 +34,21 @@ const contentRu = {
       }
     }
   },
-  themeToggle: {
-    switchToLight: 'Переключить на светлую тему',
-    switchToDark: 'Переключить на тёмную тему'
-  },
   languageSwitcher: {
     ariaLabel: 'Переключатель языка'
   },
   skills: {
     title: 'Ключевые навыки',
-    items: [
-      { id: 'java', name: 'Java' },
-      { id: 'spring', name: 'Spring' },
-      { id: 'go', name: 'Go' },
-      { id: 'kafka', name: 'Kafka' },
-      { id: 'postgresql', name: 'PostgreSQL' },
-      { id: 'kubernetes', name: 'Kubernetes' }
+    rows: [
+      [
+        { id: 'go', name: 'Go' },
+        { id: 'java', name: 'Java' }
+      ],
+      [
+        { id: 'postgresql', name: 'PostgreSQL' },
+        { id: 'kafka', name: 'Kafka' },
+        { id: 'kubernetes', name: 'Kubernetes' }
+      ]
     ]
   },
   about: {
@@ -94,17 +93,30 @@ const contentRu = {
     ]
   },
   education: {
-    title: 'Образование',
-    period: '2015 — 2020',
+    period: 'сентябрь 2015 — июнь 2020',
     institution: 'Московский государственный технический университет им. Н.Э. Баумана',
     degree: 'Информатика и вычислительная техника, специалист',
     description: 'Специализация — распределённые системы и базы данных; дипломная работа посвящена проектированию отказоустойчивых хранилищ данных.'
   },
-  languages: {
-    title: 'Языки',
-    items: [
-      { name: 'Русский', level: 'Родной' },
-      { name: 'Английский', level: 'Upper-Intermediate (B2)' }
+  roadmap: {
+    title: 'Технологии',
+    groups: [
+      {
+        name: 'Языки',
+        items: ['Java', 'Go', 'Python']
+      },
+      {
+        name: 'Инструменты',
+        items: ['Spring', 'Spring Boot', 'Maven', 'Gradle', 'Git', 'Vim', 'Claude Code']
+      },
+      {
+        name: 'Деплой',
+        items: ['Docker', 'Kubernetes', 'GitLab', 'GitHub', 'Linux']
+      },
+      {
+        name: 'Базы',
+        items: ['PostgreSQL', 'Kafka', 'Apache ActiveMQ']
+      }
     ]
   },
   footer: {

@@ -1,11 +1,9 @@
 /* ==========================================================================
    CSS Custom Properties (Theming)
-   Dark theme is the default palette; the [data-theme="light"] block overrides
-   the same variable names, so no component styles need to branch on theme.
+   Dark is the only palette the site supports.
    ========================================================================== */
 
-:root,
-[data-theme="dark"] {
+:root {
   --color-background: #0f1115;
   --color-background-alt: #14171d;
   --color-surface: #1a1e26;
@@ -19,22 +17,6 @@
   --color-accent-contrast: #0f1115;
   --color-timeline-line: #2b3140;
   --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
-}
-
-[data-theme="light"] {
-  --color-background: #f5f6f8;
-  --color-background-alt: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-  --color-border: #dfe3ea;
-  --color-text-primary: #1a1e26;
-  --color-text-secondary: #4a5163;
-  --color-text-muted: #6b7280;
-  --color-accent-primary: #2563eb;
-  --color-accent-primary-hover: #1d4ed8;
-  --color-accent-contrast: #ffffff;
-  --color-timeline-line: #dfe3ea;
-  --shadow-card: 0 8px 24px rgba(20, 25, 40, 0.08);
 }
 
 /* ==========================================================================
@@ -57,7 +39,6 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.6;
-  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1, h2, h3, p, ul, ol {
@@ -86,25 +67,48 @@ button {
 }
 
 /* ==========================================================================
-   Top bar (language switcher + theme toggle)
+   Top bar (contacts + language switcher)
    ========================================================================== */
 
 .page-topbar {
   background-color: var(--color-background-alt);
   border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .topbar-inner {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-top: 14px;
   padding-bottom: 14px;
 }
 
-.header-controls {
-  display: flex;
+.topbar-inner .contact-list {
+  margin-top: 0;
+  width: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+}
+
+.topbar-inner .contact-link {
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.topbar-inner .contact-link:hover {
+  background-color: var(--color-surface-elevated);
+}
+
+.topbar-inner .contact-value {
+  display: none;
 }
 
 .language-switcher {
@@ -134,71 +138,22 @@ button {
   color: var(--color-text-primary);
 }
 
-.theme-toggle-button {
-  width: 36px;
-  height: 36px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background-color: transparent;
-  color: var(--color-text-secondary);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.theme-toggle-button:hover {
-  background-color: var(--color-surface-elevated);
-  color: var(--color-accent-primary);
-  transform: rotate(15deg);
-}
-
-.theme-toggle-icon svg {
-  width: 18px;
-  height: 18px;
-  display: block;
-}
-
 /* ==========================================================================
-   Page layout (sidebar + main content)
+   Hero (avatar left, name/role/about right) — full-width, above Skills
    ========================================================================== */
 
-.page-layout {
+.hero-section {
+  padding: 48px 0;
+}
+
+.hero-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 40px 24px 64px;
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 48px;
-  align-items: start;
-}
-
-/* ==========================================================================
-   Sidebar (avatar, name, contacts, skills, languages)
-   ========================================================================== */
-
-.sidebar {
+  padding: 0 24px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  text-align: center;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 32px 24px;
-  box-shadow: var(--shadow-card);
-  position: sticky;
-  top: 24px;
-}
-
-.sidebar-section {
-  width: 100%;
-  margin-top: 32px;
-}
-
-.sidebar-section .section-title {
-  font-size: 18px;
-  margin-bottom: 16px;
+  justify-content: center;
+  gap: 40px;
 }
 
 .hero-avatar-wrapper {
@@ -208,7 +163,7 @@ button {
   overflow: hidden;
   border: 3px solid var(--color-accent-primary);
   box-shadow: var(--shadow-card);
-  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .hero-avatar {
@@ -218,26 +173,52 @@ button {
   display: block;
 }
 
+.hero-details {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.hero-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .hero-name {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
 
+.hero-heading-separator {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 .hero-role {
-  margin-top: 8px;
-  font-size: 15px;
+  font-size: 30px;
   font-weight: 500;
   color: var(--color-accent-primary);
 }
 
 .about-text {
   margin-top: 14px;
-  font-size: 13px;
+  max-width: 640px;
+  font-size: 14px;
   line-height: 1.6;
   color: var(--color-text-secondary);
-  text-align: justify;
-  text-align-last: left;
+}
+
+/* ==========================================================================
+   Main content layout (Experience + Education)
+   ========================================================================== */
+
+.main-content-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
 }
 
 .contact-list {
@@ -281,54 +262,59 @@ button {
 }
 
 /* ==========================================================================
-   Section shared styles
+   Skills (full-width banner between the hero section and main content)
    ========================================================================== */
 
-.main-content section {
-  padding: 40px 0;
-  border-bottom: 1px solid var(--color-border);
+.skills-banner {
+  padding: 48px 0;
 }
 
-.main-content section:first-child {
-  padding-top: 0;
+.skills-banner-inner {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 48px;
 }
-
-.main-content section:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.section-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 28px;
-  letter-spacing: -0.01em;
-}
-
-/* ==========================================================================
-   Skills
-   ========================================================================== */
 
 .skills-grid {
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 72px;
+  width: 100%;
 }
 
 .skill-card {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 22px;
   text-align: left;
+  padding: 8px 0;
 }
 
 .skill-icon {
-  width: 18px;
-  height: 18px;
+  width: 88px;
+  height: 88px;
   color: var(--color-accent-primary);
   flex-shrink: 0;
+}
+
+.skills-row:first-child .skill-icon {
+  width: 112px;
+  height: 112px;
+}
+
+.skills-row:first-child .skill-name {
+  font-size: 26px;
 }
 
 .skill-icon svg {
@@ -338,7 +324,7 @@ button {
 }
 
 .skill-name {
-  font-size: 13.5px;
+  font-size: 22px;
   font-weight: 600;
 }
 
@@ -436,32 +422,97 @@ button {
 }
 
 /* ==========================================================================
-   Languages
+   Roadmap (full-width tech-stack diagram between main content and footer)
    ========================================================================== */
 
-.languages-list {
+.roadmap-section {
+  padding: 48px 0;
+}
+
+.roadmap-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.roadmap {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  padding-top: 26px;
+}
+
+.roadmap::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-timeline-line);
+}
+
+.roadmap-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.roadmap-group-marker {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 4px var(--color-background);
+}
+
+.roadmap-group-title {
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+}
+
+.roadmap-nodes {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 14px;
 }
 
-.language-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
+.roadmap-nodes::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: var(--color-timeline-line);
 }
 
-.language-name {
+.roadmap-node {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 10px 16px;
   font-size: 13.5px;
   font-weight: 600;
-}
-
-.language-level {
-  font-size: 12px;
-  color: var(--color-accent-primary);
-  font-weight: 600;
+  color: var(--color-text-secondary);
+  box-shadow: var(--shadow-card);
 }
 
 /* ==========================================================================
@@ -471,7 +522,6 @@ button {
 .site-footer {
   padding: 40px 0;
   text-align: center;
-  border-top: 1px solid var(--color-border);
 }
 
 .footer-contact-list {
@@ -502,26 +552,55 @@ button {
    ========================================================================== */
 
 @media (max-width: 900px) {
-  .page-layout {
-    grid-template-columns: 1fr;
-    gap: 32px;
+  .roadmap {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 56px;
+    padding-top: 0;
   }
 
-  .sidebar {
+  .roadmap::before {
+    display: none;
+  }
+
+  .roadmap-group-marker {
     position: static;
+    transform: none;
+    margin-bottom: 14px;
   }
 }
 
 @media (max-width: 600px) {
-  .page-layout {
+  .hero-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  .about-text {
+    max-width: none;
+  }
+
+  .main-content-inner {
     padding: 24px 16px 48px;
   }
 
-  .sidebar {
-    padding: 24px 18px;
+  .skills-banner-inner {
+    padding: 0 16px;
   }
 
-  .hero-name {
+  .roadmap-inner {
+    padding: 0 16px;
+  }
+
+  .roadmap {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+  }
+
+  .hero-name,
+  .hero-role {
     font-size: 24px;
   }
 
@@ -530,7 +609,7 @@ button {
     height: 104px;
   }
 
-  .main-content section {
+  .main-content-inner section {
     padding: 32px 0;
   }
 
@@ -548,11 +627,5 @@ button {
 
   .timeline-content {
     padding: 16px 18px;
-  }
-}
-
-@media (max-width: 380px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
   }
 }

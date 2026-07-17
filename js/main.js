@@ -1,13 +1,11 @@
 /**
- * Application logic: language switching, theme switching and rendering of
- * localized content into the static DOM skeleton defined in index.html.
+ * Application logic: language switching and rendering of localized content
+ * into the static DOM skeleton defined in index.html.
  * No build step, no fetch() calls — everything runs directly on file://.
  */
 
 const STORAGE_KEY_LANGUAGE = 'resumeSelectedLanguage';
-const STORAGE_KEY_THEME = 'resumeSelectedTheme';
 const DEFAULT_LANGUAGE = 'ru';
-const DEFAULT_THEME = 'dark';
 
 let activeLanguageCode = DEFAULT_LANGUAGE;
 let activeContent = contentRu;
@@ -20,36 +18,6 @@ function getStoredLanguage() {
   return localStorage.getItem(STORAGE_KEY_LANGUAGE);
 }
 
-function getStoredTheme() {
-  return localStorage.getItem(STORAGE_KEY_THEME);
-}
-
-function applyTheme(themeName) {
-  document.documentElement.setAttribute('data-theme', themeName);
-  localStorage.setItem(STORAGE_KEY_THEME, themeName);
-  updateThemeToggleButton();
-}
-
-function toggleTheme() {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
-}
-
-function updateThemeToggleButton() {
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const themeToggleButton = document.getElementById('theme-toggle-button');
-  const themeToggleIcon = document.getElementById('theme-toggle-icon');
-  const isDark = currentTheme === 'dark';
-
-  themeToggleButton.setAttribute('aria-pressed', String(isDark));
-  themeToggleButton.setAttribute(
-    'aria-label',
-    isDark ? activeContent.themeToggle.switchToLight : activeContent.themeToggle.switchToDark
-  );
-  themeToggleButton.title = themeToggleButton.getAttribute('aria-label');
-  themeToggleIcon.innerHTML = isDark ? iconMarkup.sun : iconMarkup.moon;
-}
-
 function applyLanguage(languageCode) {
   activeLanguageCode = languageCode;
   activeContent = getContentForLanguage(languageCode);
@@ -58,7 +26,6 @@ function applyLanguage(languageCode) {
 
   renderContent(activeContent);
   updateLanguageButtons(languageCode);
-  updateThemeToggleButton();
 }
 
 function updateLanguageButtons(activeCode) {
@@ -79,17 +46,14 @@ function renderContent(content) {
   renderContactList(document.getElementById('contact-list'), content.hero.contacts);
   renderContactList(document.getElementById('footer-contact-list'), content.hero.contacts);
 
-  document.getElementById('skills-title').textContent = content.skills.title;
-  renderSkills(content.skills.items);
+  document.getElementById('skills-section').setAttribute('aria-label', content.skills.title);
+  renderSkills(content.skills.rows);
 
-  document.getElementById('experience-title').textContent = content.experience.title;
-  renderExperience(content.experience.jobs);
+  document.getElementById('experience-section').setAttribute('aria-label', content.experience.title);
+  renderTimeline(content.experience.jobs, content.education);
 
-  document.getElementById('education-title').textContent = content.education.title;
-  renderEducation(content.education);
-
-  document.getElementById('languages-title').textContent = content.languages.title;
-  renderLanguages(content.languages.items);
+  document.getElementById('roadmap-section').setAttribute('aria-label', content.roadmap.title);
+  renderRoadmap(content.roadmap.groups);
 
   document.getElementById('footer-copyright').textContent =
     content.footer.copyrightText.replace('{year}', String(new Date().getFullYear()));
@@ -119,22 +83,28 @@ function renderContactList(listElement, contacts) {
   });
 }
 
-function renderSkills(skillItems) {
+function renderSkills(skillRows) {
   const skillsGrid = document.getElementById('skills-grid');
   skillsGrid.innerHTML = '';
-  skillItems.forEach(function (skill) {
-    const skillCard = document.createElement('div');
-    skillCard.className = 'skill-card';
-    skillCard.innerHTML =
-      '<span class="skill-icon">' + iconMarkup[skill.id] + '</span>' +
-      '<span class="skill-name">' + skill.name + '</span>';
-    skillsGrid.appendChild(skillCard);
+  skillRows.forEach(function (rowItems) {
+    const skillsRow = document.createElement('div');
+    skillsRow.className = 'skills-row';
+    rowItems.forEach(function (skill) {
+      const skillCard = document.createElement('div');
+      skillCard.className = 'skill-card';
+      skillCard.innerHTML =
+        '<span class="skill-icon">' + iconMarkup[skill.id] + '</span>' +
+        '<span class="skill-name">' + skill.name + '</span>';
+      skillsRow.appendChild(skillCard);
+    });
+    skillsGrid.appendChild(skillsRow);
   });
 }
 
-function renderExperience(jobs) {
+function renderTimeline(jobs, education) {
   const timeline = document.getElementById('experience-timeline');
   timeline.innerHTML = '';
+
   jobs.forEach(function (job) {
     const timelineItem = document.createElement('li');
     timelineItem.className = 'timeline-item';
@@ -154,15 +124,10 @@ function renderExperience(jobs) {
 
     timeline.appendChild(timelineItem);
   });
-}
 
-function renderEducation(education) {
-  const timeline = document.getElementById('education-timeline');
-  timeline.innerHTML = '';
-
-  const timelineItem = document.createElement('li');
-  timelineItem.className = 'timeline-item';
-  timelineItem.innerHTML =
+  const educationItem = document.createElement('li');
+  educationItem.className = 'timeline-item';
+  educationItem.innerHTML =
     '<div class="timeline-marker" aria-hidden="true"></div>' +
     '<div class="timeline-content">' +
     '<p class="timeline-period">' + education.period + '</p>' +
@@ -171,33 +136,37 @@ function renderEducation(education) {
     '<ul class="timeline-points"><li>' + education.description + '</li></ul>' +
     '</div>';
 
-  timeline.appendChild(timelineItem);
+  timeline.appendChild(educationItem);
 }
 
-function renderLanguages(languageItems) {
-  const languagesList = document.getElementById('languages-list');
-  languagesList.innerHTML = '';
-  languageItems.forEach(function (languageItem) {
-    const listItem = document.createElement('li');
-    listItem.className = 'language-item';
-    listItem.innerHTML =
-      '<span class="language-name">' + languageItem.name + '</span>' +
-      '<span class="language-level">' + languageItem.level + '</span>';
-    languagesList.appendChild(listItem);
+function renderRoadmap(roadmapGroups) {
+  const roadmap = document.getElementById('roadmap-groups');
+  roadmap.innerHTML = '';
+  roadmapGroups.forEach(function (group) {
+    const groupElement = document.createElement('div');
+    groupElement.className = 'roadmap-group';
+
+    const nodesMarkup = group.items
+      .map(function (item) { return '<li class="roadmap-node">' + item + '</li>'; })
+      .join('');
+
+    groupElement.innerHTML =
+      '<div class="roadmap-group-marker" aria-hidden="true"></div>' +
+      '<h3 class="roadmap-group-title">' + group.name + '</h3>' +
+      '<ul class="roadmap-nodes">' + nodesMarkup + '</ul>';
+
+    roadmap.appendChild(groupElement);
   });
 }
 
 function initializeEventListeners() {
-  document.getElementById('theme-toggle-button').addEventListener('click', toggleTheme);
   document.getElementById('language-button-ru').addEventListener('click', function () { applyLanguage('ru'); });
   document.getElementById('language-button-en').addEventListener('click', function () { applyLanguage('en'); });
 }
 
 function initialize() {
-  const storedTheme = getStoredTheme() || DEFAULT_THEME;
   const storedLanguage = getStoredLanguage() || DEFAULT_LANGUAGE;
 
-  applyTheme(storedTheme);
   applyLanguage(storedLanguage);
   initializeEventListeners();
 }

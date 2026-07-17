@@ -9,7 +9,7 @@ const contentEn = {
   },
   hero: {
     name: 'Ivan Ivanov',
-    role: 'Backend Developer · Java & Go',
+    role: 'Software Engineer',
     avatarAlt: 'Profile avatar placeholder',
     contacts: {
       telegram: {
@@ -34,22 +34,21 @@ const contentEn = {
       }
     }
   },
-  themeToggle: {
-    switchToLight: 'Switch to light theme',
-    switchToDark: 'Switch to dark theme'
-  },
   languageSwitcher: {
     ariaLabel: 'Language switcher'
   },
   skills: {
     title: 'Key Skills',
-    items: [
-      { id: 'java', name: 'Java' },
-      { id: 'spring', name: 'Spring' },
-      { id: 'go', name: 'Go' },
-      { id: 'kafka', name: 'Kafka' },
-      { id: 'postgresql', name: 'PostgreSQL' },
-      { id: 'kubernetes', name: 'Kubernetes' }
+    rows: [
+      [
+        { id: 'go', name: 'Go' },
+        { id: 'java', name: 'Java' }
+      ],
+      [
+        { id: 'postgresql', name: 'PostgreSQL' },
+        { id: 'kafka', name: 'Kafka' },
+        { id: 'kubernetes', name: 'Kubernetes' }
+      ]
     ]
   },
   about: {
@@ -94,17 +93,30 @@ const contentEn = {
     ]
   },
   education: {
-    title: 'Education',
-    period: '2015 — 2020',
+    period: 'September 2015 — June 2020',
     institution: 'Bauman Moscow State Technical University',
     degree: 'Computer Science and Engineering, Specialist Degree',
     description: 'Specialized in distributed systems and databases; thesis focused on designing fault-tolerant data storage architectures.'
   },
-  languages: {
-    title: 'Languages',
-    items: [
-      { name: 'Russian', level: 'Native' },
-      { name: 'English', level: 'Upper-Intermediate (B2)' }
+  roadmap: {
+    title: 'Technology Stack',
+    groups: [
+      {
+        name: 'Languages',
+        items: ['Java', 'Go', 'Python']
+      },
+      {
+        name: 'Tools',
+        items: ['Spring', 'Spring Boot', 'Maven', 'Gradle', 'Git', 'Vim', 'Claude Code']
+      },
+      {
+        name: 'Deploy',
+        items: ['Docker', 'Kubernetes', 'GitLab', 'GitHub', 'Linux']
+      },
+      {
+        name: 'Databases',
+        items: ['PostgreSQL', 'Kafka', 'Apache ActiveMQ']
+      }
     ]
   },
   footer: {

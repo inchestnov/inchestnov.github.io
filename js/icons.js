@@ -1,14 +1,13 @@
 /**
- * Inline SVG icon markup used across the site (skills, contacts, theme toggle).
+ * Inline SVG icon markup used across the site (skills, contacts).
  * Brand icons (java, spring, go, kafka, postgresql, kubernetes, telegram,
  * linkedin, github) are official marks from the Simple Icons project
  * (https://simpleicons.org, CC0), downloaded once into assets/icons/*.svg and
  * copied here as inline markup so the site stays fully self-contained and
  * renders identically offline when opened directly via file://. Each uses
  * fill="currentColor" on the root <svg> so the glyph inherits the
- * surrounding text color and reacts to theme changes and hover states
- * through CSS alone. email/sun/moon are not brand marks, so they remain
- * hand-authored stroke icons.
+ * surrounding text color and reacts to hover states through CSS alone.
+ * email is not a brand mark, so it remains a hand-authored stroke icon.
  */
 const iconMarkup = {
   java:
@@ -60,23 +59,5 @@ const iconMarkup = {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
     '<rect x="2" y="4" width="20" height="16" rx="2"></rect>' +
     '<polyline points="2 6 12 13 22 6"></polyline>' +
-    '</svg>',
-
-  sun:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<circle cx="12" cy="12" r="4"></circle>' +
-    '<line x1="12" y1="1" x2="12" y2="4"></line>' +
-    '<line x1="12" y1="20" x2="12" y2="23"></line>' +
-    '<line x1="4.2" y1="4.2" x2="6.3" y2="6.3"></line>' +
-    '<line x1="17.7" y1="17.7" x2="19.8" y2="19.8"></line>' +
-    '<line x1="1" y1="12" x2="4" y2="12"></line>' +
-    '<line x1="20" y1="12" x2="23" y2="12"></line>' +
-    '<line x1="4.2" y1="19.8" x2="6.3" y2="17.7"></line>' +
-    '<line x1="17.7" y1="6.3" x2="19.8" y2="4.2"></line>' +
-    '</svg>',
-
-  moon:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path d="M21 12.5A9 9 0 1 1 11.5 3a7 7 0 0 0 9.5 9.5z"></path>' +
     '</svg>'
 };

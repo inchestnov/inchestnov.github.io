@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,51 +13,49 @@
 <body>
   <div class="page-topbar">
     <div class="section-inner topbar-inner">
-      <div class="header-controls">
-        <div class="language-switcher" id="language-switcher" role="group">
-          <button type="button" class="language-button" id="language-button-ru" data-lang="ru" aria-pressed="true">RU</button>
-          <button type="button" class="language-button" id="language-button-en" data-lang="en" aria-pressed="false">EN</button>
-        </div>
-        <button type="button" class="theme-toggle-button" id="theme-toggle-button">
-          <span class="theme-toggle-icon" id="theme-toggle-icon" aria-hidden="true"></span>
-        </button>
+      <ul class="contact-list" id="contact-list"></ul>
+      <div class="language-switcher" id="language-switcher" role="group">
+        <button type="button" class="language-button" id="language-button-ru" data-lang="ru" aria-pressed="true">RU</button>
+        <button type="button" class="language-button" id="language-button-en" data-lang="en" aria-pressed="false">EN</button>
       </div>
     </div>
   </div>
 
-  <div class="page-layout">
-    <aside class="sidebar" id="sidebar">
+  <section class="hero-section" id="hero-section">
+    <div class="hero-inner">
       <div class="hero-avatar-wrapper">
         <img class="hero-avatar" src="assets/avatar-placeholder.svg" alt="" id="hero-avatar-image">
       </div>
-      <h1 class="hero-name" id="hero-name"></h1>
-      <p class="hero-role" id="hero-role"></p>
-      <p class="about-text" id="about-text"></p>
-      <ul class="contact-list" id="contact-list"></ul>
-
-      <div class="sidebar-section">
-        <h2 class="section-title" id="skills-title"></h2>
-        <div class="skills-grid" id="skills-grid"></div>
+      <div class="hero-details">
+        <div class="hero-heading">
+          <h1 class="hero-name" id="hero-name"></h1>
+          <span class="hero-heading-separator" aria-hidden="true">·</span>
+          <p class="hero-role" id="hero-role"></p>
+        </div>
+        <p class="about-text" id="about-text"></p>
       </div>
+    </div>
+  </section>
 
-      <div class="sidebar-section">
-        <h2 class="section-title" id="languages-title"></h2>
-        <ul class="languages-list" id="languages-list"></ul>
-      </div>
-    </aside>
+  <section class="skills-banner" id="skills-section">
+    <div class="skills-banner-inner">
+      <div class="skills-grid" id="skills-grid"></div>
+    </div>
+  </section>
 
-    <main class="main-content">
-      <section class="education-section" id="education-section" aria-labelledby="education-title">
-        <h2 class="section-title" id="education-title"></h2>
-        <ol class="experience-timeline" id="education-timeline"></ol>
-      </section>
-
-      <section class="experience-section" id="experience-section" aria-labelledby="experience-title">
-        <h2 class="section-title" id="experience-title"></h2>
+  <main class="main-content">
+    <div class="main-content-inner">
+      <section class="experience-section" id="experience-section">
         <ol class="experience-timeline" id="experience-timeline"></ol>
       </section>
-    </main>
-  </div>
+    </div>
+  </main>
+
+  <section class="roadmap-section" id="roadmap-section">
+    <div class="roadmap-inner">
+      <div class="roadmap" id="roadmap-groups"></div>
+    </div>
+  </section>
 
   <footer class="site-footer">
     <div class="section-inner">
