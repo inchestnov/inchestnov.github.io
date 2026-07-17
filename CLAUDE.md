@@ -52,7 +52,7 @@ resume/
 
 ## 3. Naming conventions
 
-- CSS classes: kebab-case, BEM-ish but flat (`skill-card`, `timeline-marker`,
+- CSS classes: kebab-case, BEM-ish but flat (`skill-card`, `timeline-item`,
   `contact-link`) — descriptive, no abbreviations.
 - CSS custom properties: `--color-*`, `--shadow-*` prefixes grouped by role
   (e.g. `--color-accent-primary`, `--color-text-secondary`).
@@ -150,10 +150,20 @@ the element IDs are preserved.
 
 ## 7. Experience timeline data structure
 
-The experience section is a vertical timeline (a connecting line down the
-left edge, with a marker dot + card per entry). Defined per-language inside
-`content_ru.js` / `content_en.js` under `experience.jobs`, an array ordered
-**most-recent-first** (top of the list = current/latest job):
+The experience section is a **zigzag timeline**: a single connecting line
+down the vertical center (`.experience-timeline::before`, `left: 50%`), a
+marker dot centered on that line per entry (`.timeline-marker`, also
+`left: 50%`), and `.timeline-content` cards alternating sides —
+`:nth-child(odd)` cards sit in the left half (`margin-right: calc(50% + 24px)`),
+`:nth-child(even)` cards sit in the right half (`margin-left: calc(50% + 24px)`).
+Below 900px this collapses to the classic single-column layout: the line
+and markers move to a fixed `left: 5px`, and every card (odd or even) gets
+`margin-left: 32px` instead of alternating — the zigzag only reads correctly
+with room on both sides of a center line, which narrow viewports don't have.
+
+Defined per-language inside `content_ru.js` / `content_en.js` under
+`experience.jobs`, an array ordered **most-recent-first** (top of the list =
+current/latest job — also the first/leftmost card in the zigzag):
 
 ```js
 {
@@ -170,7 +180,8 @@ left edge, with a marker dot + card per entry). Defined per-language inside
 points) into `#experience-timeline`. **To add a new job:** insert a new
 object at the *top* of the `jobs` array in *both* `content_ru.js` and
 `content_en.js` (keep both files in sync) — no HTML or CSS changes are
-required.
+required (the new item just inherits whichever side its new odd/even
+position lands on).
 
 Education (`content_ru.js`/`content_en.js` under `education`) reuses this
 same visual language deliberately: `{ period, institution, degree,

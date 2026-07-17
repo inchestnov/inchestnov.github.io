@@ -329,42 +329,52 @@ button {
 }
 
 /* ==========================================================================
-   Experience timeline (vertical)
+   Experience timeline (zigzag — centered line, alternating left/right)
    ========================================================================== */
 
 .experience-timeline {
   position: relative;
-  padding-left: 32px;
 }
 
 .experience-timeline::before {
   content: '';
   position: absolute;
-  left: 5px;
+  left: 50%;
   top: 6px;
   bottom: 6px;
   width: 2px;
+  transform: translateX(-50%);
   background-color: var(--color-timeline-line);
 }
 
 .timeline-item {
   position: relative;
-  padding-bottom: 40px;
+  margin-top: 40px;
 }
 
-.timeline-item:last-child {
-  padding-bottom: 0;
+.timeline-item:first-child {
+  margin-top: 0;
 }
 
 .timeline-marker {
   position: absolute;
-  left: -32px;
   top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background-color: var(--color-accent-primary);
   box-shadow: 0 0 0 4px var(--color-background);
+  z-index: 1;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+  margin-right: calc(50% + 24px);
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+  margin-left: calc(50% + 24px);
 }
 
 .timeline-content {
@@ -567,6 +577,22 @@ button {
     transform: none;
     margin-bottom: 14px;
   }
+
+  .experience-timeline::before {
+    left: 5px;
+    transform: none;
+  }
+
+  .timeline-marker {
+    left: 5px;
+    transform: none;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-content,
+  .timeline-item:nth-child(even) .timeline-content {
+    margin-left: 32px;
+    margin-right: 0;
+  }
 }
 
 @media (max-width: 600px) {
@@ -609,20 +635,8 @@ button {
     height: 104px;
   }
 
-  .main-content-inner section {
-    padding: 32px 0;
-  }
-
   .section-inner {
     padding: 0 16px;
-  }
-
-  .experience-timeline {
-    padding-left: 24px;
-  }
-
-  .timeline-marker {
-    left: -24px;
   }
 
   .timeline-content {
