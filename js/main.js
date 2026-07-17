@@ -74,12 +74,10 @@ function renderContent(content) {
   document.getElementById('hero-name').textContent = content.hero.name;
   document.getElementById('hero-role').textContent = content.hero.role;
   document.getElementById('hero-avatar-image').setAttribute('alt', content.hero.avatarAlt);
+  document.getElementById('about-text').textContent = content.about.text;
 
   renderContactList(document.getElementById('contact-list'), content.hero.contacts);
   renderContactList(document.getElementById('footer-contact-list'), content.hero.contacts);
-
-  document.getElementById('about-title').textContent = content.about.title;
-  document.getElementById('about-text').textContent = content.about.text;
 
   document.getElementById('skills-title').textContent = content.skills.title;
   renderSkills(content.skills.items);

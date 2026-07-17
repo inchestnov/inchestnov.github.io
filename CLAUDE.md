@@ -67,8 +67,8 @@ resume/
   constant (`contentRu`, `contentEn`) with an identical shape:
   `meta`, `hero`, `themeToggle`, `languageSwitcher`, `about`, `skills`,
   `experience`, `education`, `languages`, `footer`. `about` is a short
-  `{ title, text }` summary (3-5 sentences, one paragraph) rendered above
-  Experience.
+  `{ text }` bio (kept to two sentences) rendered in the sidebar between the
+  name/role and the contact list.
 - They are loaded as plain `<script src="...">` tags (not `fetch()`), because
   `fetch()` of local JSON is blocked by the browser's CORS policy under
   `file://`. Any new locale must follow this same pattern — never switch this
@@ -113,14 +113,13 @@ resume/
 - `.page-layout` — a CSS grid (`aside.sidebar` + `main.main-content`,
   `300px 1fr`, stacks to a single column under 900px, sidebar becomes
   `position: static` on mobile instead of sticky).
-  - **Sidebar** (`#sidebar`): avatar, name, role, contact list, then two
-    `.sidebar-section` blocks in order — Key Skills (`#skills-title` +
+  - **Sidebar** (`#sidebar`): avatar, name, role, a short two-sentence About
+    blurb (`#about-text`, plain paragraph, no heading), contact list, then
+    two `.sidebar-section` blocks in order — Key Skills (`#skills-title` +
     `#skills-grid`) and Languages (`#languages-title` + `#languages-list`).
-  - **Main content** (`.main-content`), top to bottom: About (`#about-title`
-    + `#about-text`, a short summary paragraph, styled as its own bordered
-    card via the `#about-section` ID rule), Education (`#education-title` +
-    `#education-timeline`), then Experience (`#experience-title` +
-    `#experience-timeline`). Education and Experience both use the
+  - **Main content** (`.main-content`), top to bottom: Education
+    (`#education-title` + `#education-timeline`), then Experience
+    (`#experience-title` + `#experience-timeline`). Both use the
     `.experience-timeline` / `.timeline-item` / `.timeline-marker` /
     `.timeline-content` classes so they render in the exact same vertical
     timeline style — Education is just a timeline with a single entry (see

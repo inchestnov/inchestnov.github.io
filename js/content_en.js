@@ -53,8 +53,7 @@ const contentEn = {
     ]
   },
   about: {
-    title: 'About Me',
-    text: 'Backend developer with 5+ years of experience building reliable, high-load systems in Java and Go. I specialize in microservice architecture, asynchronous service integration via Kafka, and optimizing PostgreSQL performance. I have worked in fintech and at a stock exchange, where performance, fault tolerance, and attention to detail matter most. I enjoy digging into complex technical problems and sharing what I learn with the team. I am always open to picking up new technologies and approaches.'
+    text: 'Backend developer with 5+ years of experience building reliable, high-load systems in Java and Go, specializing in microservices, Kafka, and PostgreSQL. I have worked in fintech and at a stock exchange — I enjoy tackling complex technical problems and I am always open to learning new technologies.'
   },
   experience: {
     title: 'Work Experience',
