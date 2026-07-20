@@ -2,7 +2,7 @@ import type { ResumeContent } from '../types';
 
 export const contentEn: ResumeContent = {
   meta: {
-    pageTitle: 'Igor Chestnov — Software Engineer | Resume'
+    pageTitle: 'Igor Chestnov | Resume'
   },
   hero: {
     name: 'Igor Chestnov',
