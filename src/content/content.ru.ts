@@ -49,43 +49,48 @@ export const contentRu: ResumeContent = {
     ]
   },
   about: {
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    text: 'Инженер-программист с опытом разработки сложных программных систем. Ориентирован на решение нетривиальных инженерных задач, проектирование архитектуры и создание качественного программного обеспечения. Не ограничиваюсь конкретным языком программирования или предметной областью, выбирая технологии исходя из требований задачи. Имею опыт проектирования и разработки высоконагруженных распределённых систем, уделяя особое внимание отказоустойчивости, масштабируемости, наблюдаемости (observability) и сопровождаемости. Стремлюсь создавать сервисы, которые легко развивать, эксплуатировать и мониторить в production-среде.'
   },
   experience: {
     title: 'Опыт работы',
     jobs: [
       {
-        company: 'Ozon Fintech',
-        role: 'Principal Software Engineer',
+        company: 'Озон Банк',
+        role: 'Software Engineer (Go Developer)',
         period: 'Декабрь 2023 — настоящее время',
         points: [
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-          'Nisi ut aliquip ex ea commodo consequat duis aute irure dolor.'
-        ]
+          'Разрабатываю сервисы для обработки, хранения и доступа к карточным данным.',
+          'Проектирую надёжные системы для безопасного хранения криптографических данных.',
+          'Развиваю сервисы процессингового ядра банка, отвечающие за безопасность и обработку карточных операций.',
+          'Отвечаю за правильность выполнения правил платёжных систем.',
+          'Отвечаю за функциональность выпуска банковских карт.'
+        ],
+        icon: 'ozon-bank'
       },
       {
         company: 'Московская Биржа (MOEX)',
-        role: 'Senior Java Developer',
+        role: 'Java Developer',
         period: 'Октябрь 2021 — Декабрь 2023',
         points: [
-          'In reprehenderit in voluptate velit esse cillum dolore eu fugiat.',
-          'Nulla pariatur excepteur sint occaecat cupidatat non proident.',
-          'Sunt in culpa qui officia deserunt mollit anim id est laborum.',
-          'Curabitur pretium tincidunt lacus nulla gravida orci a odio.'
-        ]
+          'Выполнял декомпозицию монолитного приложения на независимые микросервисы.',
+          'Отвечал за хранение клиентских данных и доступ к ним.',
+          'Участвовал в рефакторинге существующей архитектуры и повышении сопровождаемости системы.',
+          'Разрабатывал интеграционные решения для взаимодействия компонентов распределённой системы.'
+        ],
+        icon: 'moex'
       },
       {
         company: 'Haulmont',
         role: 'Java Developer',
         period: 'Январь 2020 — Октябрь 2021',
         points: [
-          'Nullam varius turpis et commodo pharetra est eros bibendum elit.',
-          'Nec luctus magna felis sollicitudin mauris integer in mauris.',
-          'Eu nibh euismod gravida duis ac tellus et risus vulputate.',
-          'Vehicula donec lobortis risus a elit etiam tempor ut ullamcorper.'
-        ]
+          'Разрабатывал функциональность платформы ТЕЗИС по требованиям заказчиков.',
+          'Участвовал в развитии и сопровождении коробочной версии продукта в составе команды ядра.',
+          'Проектировал и реализовывал серверную бизнес-логику на Java и Spring Framework.',
+          'Дорабатывал существующие модули системы электронного документооборота и автоматизации бизнес-процессов.',
+          'Участвовал в командной разработке и сопровождении корпоративной платформы.'
+        ],
+        icon: 'haulmont'
       }
     ]
   },
@@ -93,7 +98,11 @@ export const contentRu: ResumeContent = {
     period: 'сентябрь 2015 — июнь 2020',
     institution: 'Самарский университет',
     degree: 'Фундаментальная математика и механика',
-    description: 'Ligula eu tempor congue eros est euismod turpis id tincidunt sapien risus.'
+    description: [
+      'Занимался исследованиями в области теории групп, специализируясь на треугольных группах и их суперхарактерах.',
+      'Подготовил и защитил дипломную работу «Характеры треугольной группы 4-го порядка».'
+    ],
+    icon: 'samara-university'
   },
   roadmap: {
     title: 'Технологии',
@@ -101,8 +110,8 @@ export const contentRu: ResumeContent = {
       {
         name: 'Языки',
         items: [
-          { id: 'java', name: 'Java' },
           { id: 'go', name: 'Go' },
+          { id: 'java', name: 'Java' },
           { id: 'python', name: 'Python' }
         ]
       },
@@ -111,10 +120,7 @@ export const contentRu: ResumeContent = {
         items: [
           { id: 'spring', name: 'Spring' },
           { id: 'spring-boot', name: 'Spring Boot' },
-          { id: 'maven', name: 'Maven' },
-          { id: 'gradle', name: 'Gradle' },
           { id: 'git', name: 'Git' },
-          { id: 'vim', name: 'Vim' },
           { id: 'claude-code', name: 'Claude Code' }
         ]
       },

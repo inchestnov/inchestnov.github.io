@@ -33,13 +33,15 @@ export interface ExperienceJob {
   role: string;
   period: string;
   points: string[];
+  icon: string;
 }
 
 export interface EducationEntry {
   period: string;
   institution: string;
   degree: string;
-  description: string;
+  description: string[];
+  icon: string;
 }
 
 export interface ResumeContent {

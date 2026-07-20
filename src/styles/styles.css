@@ -186,7 +186,7 @@ button {
 }
 
 .hero-details {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -217,9 +217,9 @@ button {
 
 .about-text {
   margin-top: 14px;
-  max-width: 640px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
+  text-align: justify;
   color: var(--color-text-secondary);
 }
 
@@ -405,8 +405,29 @@ button {
   letter-spacing: 0.04em;
 }
 
-.timeline-company {
+.timeline-heading {
   margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.timeline-icon {
+  display: inline-flex;
+  height: 22px;
+  max-width: 60px;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.timeline-icon svg {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.timeline-company {
   font-size: 19px;
   font-weight: 700;
 }
@@ -640,6 +661,7 @@ button {
 
   .about-text {
     max-width: none;
+    text-align: center;
   }
 
   .main-content-inner {

@@ -289,17 +289,28 @@ Defined per-language inside `content.ru.ts` / `content.en.ts` under
   company: 'Company Name',
   role: 'Job title',
   period: 'Start — End (or "Present")',
-  points: ['Bullet 1', 'Bullet 2', ...]
+  points: ['Bullet 1', 'Bullet 2', ...],
+  icon: 'icon-id'
 }
 ```
 
 `ExperienceSection.tsx` maps `jobs` to one `<TimelineItem>` each, then
 appends one more `<TimelineItem>` built from `content.education` (`{ period,
-institution, degree, description }` maps to `TimelineItem`'s `{ period,
-company, role, points }` props — `institution` → heading, `degree` →
-subheading, `description` → the sole entry in `points`). **To add a new
-job:** insert a new object at the *top* of the `jobs` array in *both*
-`content.ru.ts` and `content.en.ts` — no component or CSS changes required.
+institution, degree, description, icon }` maps to `TimelineItem`'s `{ period,
+company, role, points, icon }` props — `institution` → heading, `degree` →
+subheading, `description` (a `string[]`, one sentence per bullet) → `points`
+directly). **To add a new job:** insert a new object at the *top* of the
+`jobs` array in *both* `content.ru.ts` and `content.en.ts` — no component or
+CSS changes required.
+
+`icon` is a plain `string` id looked up in `iconMarkup` (like
+`RoadmapItem.id`/`SkillItem.id` — see §8/§9), rendered by `TimelineItem` via
+the shared `<Icon>` component inside `.timeline-heading` (a flex row placed
+above the company name, `.timeline-icon` sized 22×22px, colored via
+`var(--color-accent-primary)` — same pattern as `.roadmap-node-icon`).
+Companies without a real logo yet use the hand-authored
+`'company-placeholder'` generic briefcase icon (see §9); swap in a real
+brand/company icon id once one exists for that entry.
 
 `TimelineItem` is a plain (non-memoized) component — its props change on
 every language switch by definition, so `React.memo` would provide no
@@ -397,6 +408,89 @@ case keeps type-checking.
   `fill="currentColor"` wrapper.
 - `email` is not a brand mark — it stays a hand-authored stroke icon and is
   not tied to any file in `assets/icons/`.
+- `company-placeholder` is likewise hand-authored (a generic briefcase
+  outline, same `fill="none" stroke="currentColor"` style as `email`), used
+  as the `icon` for any experience-timeline entry (§7) that doesn't have a
+  real company logo yet. Not tied to any file in `assets/icons/`.
+- Two of the four real per-company/institution logos below (`ozon-bank`,
+  `samara-university`) are plate-free: no background shape, just the
+  mark's own linework/letterforms recolored to `fill="currentColor"`
+  (site accent blue), and each `viewBox` cropped tight to that content's
+  own bounding box rather than the source artwork's full canvas (which
+  reserved space for a plate and/or a wordmark that this site drops — see
+  each entry for specifics). `moex` keeps its plate/block (see its own
+  entry below), with a `fill="var(--color-surface)"` knockout treatment on
+  the letters so they read as a cutout in the blue block rather than a
+  literal white wordmark — this same knockout treatment was tried for
+  `ozon-bank` too at one point and dropped there in favor of the simpler
+  plate-free look, so the two logos aren't perfectly consistent with each
+  other; that's a deliberate per-icon call, not an oversight. `haulmont`
+  also keeps its solid disc background (see its own entry below for why,
+  and for the several plate-free/multi-color variants that were tried and
+  rejected along the way) — both its disc and its node/network pattern
+  recolor to the same `fill="currentColor"`, and the thin gap between them
+  (an intentional gap in the original artwork, not a rendering accident)
+  is what reads as the mark's dark line-drawing detail. If any of this is
+  ever revisited, the reference `.svg` files in `assets/icons/` still have
+  the original plates/discs to work from.
+- `ozon-bank` is a real per-company logo but, like `activemq`, not from
+  Simple Icons — sourced from logo-teka.com instead (checked Simple Icons
+  first; no entry there). The official mark is a solid brand-blue square
+  badge with a white "OZON BANK" wordmark; `assets/icons/ozon-bank.svg` is
+  the untouched reference copy of that original two-tone version.
+  `iconMarkup['ozon-bank']` drops the background square entirely and
+  recolors just the wordmark to `currentColor`.
+- `moex` is also sourced from logo-teka.com (checked Simple Icons first; no
+  entry there). The official mark is a red rounded-corner block with "MOEX"
+  cut out in white inside it, plus a smaller "MOSCOW EXCHANGE" wordmark to
+  its right; `assets/icons/moex.svg` is the untouched two-part original.
+  `iconMarkup.moex` keeps the block plus the "MOEX" letters but drops the
+  secondary wordmark (it would just duplicate the adjacent
+  `.timeline-company` text). The block recolors to `fill="currentColor"`
+  (site accent blue) like every other icon, while the letters use
+  `fill="var(--color-surface)"` (not white, not `currentColor`) so they
+  read as a cutout knocked out to the dark `.timeline-content` card
+  background rather than a literal white wordmark or an invisible
+  same-color-as-the-block fill. Its `viewBox` is cropped to the block's
+  own bounding box (`0 0 562 345.8445435`) rather than the source's full
+  `0 0 1000 345.8445435` canvas, which reserved empty width for the
+  dropped wordmark. A plate-free, letters-only version (`viewBox="39 165
+  497 147"`, just the letters recolored to `currentColor`, no block at
+  all) was tried and replaced with this one on request.
+- `samara-university` is sourced from ssau.ru directly (the university's own
+  site, not Simple Icons) — its "white horizontal Russian logo" export is a
+  full lockup: a spiral emblem mark followed by the complete "Самарский
+  университет..." wordmark, all in white; `assets/icons/samara-university.svg`
+  is the untouched original (`viewBox 0 0 293 40`). `iconMarkup['samara-university']`
+  keeps only the spiral emblem (3 paths) and drops the wordmark portion —
+  same duplicate-text reasoning as the `moex`/`ozon-bank` wordmarks, since
+  `EducationEntry.institution` (§7) already renders the university's name as
+  heading text next to the icon. `viewBox` is cropped to the emblem's own
+  bounding box (`0 0 29 40`) rather than the source's full 293-wide canvas,
+  which reserved width for the dropped wordmark.
+- `haulmont` is sourced from haulmont.ru's own footer logo, which is an SVG
+  sprite reference (`<svg><use href="/_nuxt/<hash>.svg#i-logo">`) rather
+  than an inline icon or a Simple Icons entry — the sprite sheet was
+  downloaded and the `#i-logo` symbol extracted. The full symbol
+  (`viewBox 0 0 152 32`) is a circular emblem followed by the complete
+  "HAULMONT" wordmark, all in white; `assets/icons/haulmont.svg` is that
+  full lockup reassembled from the symbol, untouched. The wordmark is
+  dropped, usual duplicate-text reasoning. The emblem keeps the original
+  two-path structure: a node/network pattern path, plus a solid disc path
+  with that same pattern knocked out of it as a hole via
+  `fill-rule="evenodd"` (the network only reads as distinct shapes because
+  of that thin gap, not color contrast). Both paths recolor to
+  `fill="currentColor"` (site accent blue), same as every other icon in
+  this file — the thin gap between the disc's hole and the pattern reads
+  as dark "engraved" lines (the dark `.timeline-content` card background
+  showing through that gap), which is what gives the mark its
+  line-drawing look, not any separate stroke or second color. A
+  plate-free treatment (dropping the disc to a thin ring outline, or to
+  nothing at all), a red node/connector overlay on the blue disc, an
+  all-green fill with the nodes punched out as transparent holes, and a
+  `fill="none" stroke="currentColor"` bare-outline version were all tried
+  and rejected along the way — this original recolored-as-is version is
+  what stuck.
 
 ## 10. React architecture notes
 

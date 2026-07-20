@@ -17,13 +17,15 @@ function ExperienceSectionComponent() {
             company={job.company}
             role={job.role}
             points={job.points}
+            icon={job.icon}
           />
         ))}
         <TimelineItem
           period={education.period}
           company={education.institution}
           role={education.degree}
-          points={[education.description]}
+          points={education.description}
+          icon={education.icon}
         />
       </ol>
     </section>

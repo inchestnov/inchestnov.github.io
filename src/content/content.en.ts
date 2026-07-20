@@ -49,43 +49,48 @@ export const contentEn: ResumeContent = {
     ]
   },
   about: {
-    text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+    text: 'Software engineer with experience building complex software systems. Focused on solving non-trivial engineering problems, designing architecture, and delivering high-quality software. Not tied to any single programming language or domain — technology choices are driven by the requirements of the task at hand. I have experience designing and building high-load distributed systems, with particular attention to fault tolerance, scalability, observability, and maintainability. I aim to build services that are easy to evolve, operate, and monitor in production.'
   },
   experience: {
     title: 'Work Experience',
     jobs: [
       {
-        company: 'Ozon Fintech',
-        role: 'Principal Software Engineer',
+        company: 'Ozon Bank',
+        role: 'Software Engineer (Go Developer)',
         period: 'December 2023 — Present',
         points: [
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-          'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-          'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-          'Nisi ut aliquip ex ea commodo consequat duis aute irure dolor.'
-        ]
+          'Develop services for processing, storing, and accessing card data.',
+          'Design reliable systems for the secure storage of cryptographic data.',
+          "Evolve the bank's core processing services responsible for security and card operation handling.",
+          'Ensure the correct application of payment system rules.',
+          'Responsible for bank card issuance functionality.'
+        ],
+        icon: 'ozon-bank'
       },
       {
         company: 'Moscow Exchange (MOEX)',
-        role: 'Senior Java Developer',
+        role: 'Java Developer',
         period: 'October 2021 — December 2023',
         points: [
-          'In reprehenderit in voluptate velit esse cillum dolore eu fugiat.',
-          'Nulla pariatur excepteur sint occaecat cupidatat non proident.',
-          'Sunt in culpa qui officia deserunt mollit anim id est laborum.',
-          'Curabitur pretium tincidunt lacus nulla gravida orci a odio.'
-        ]
+          'Decomposed a monolithic application into independent microservices.',
+          'Was responsible for storing client data and controlling access to it.',
+          'Participated in refactoring the existing architecture to improve maintainability.',
+          'Built integration solutions for communication between components of the distributed system.'
+        ],
+        icon: 'moex'
       },
       {
         company: 'Haulmont',
         role: 'Java Developer',
         period: 'January 2020 — October 2021',
         points: [
-          'Nullam varius turpis et commodo pharetra est eros bibendum elit.',
-          'Nec luctus magna felis sollicitudin mauris integer in mauris.',
-          'Eu nibh euismod gravida duis ac tellus et risus vulputate.',
-          'Vehicula donec lobortis risus a elit etiam tempor ut ullamcorper.'
-        ]
+          'Developed functionality for the TESSA platform based on customer requirements.',
+          "Participated in the development and maintenance of the product's off-the-shelf version as part of the core team.",
+          'Designed and implemented server-side business logic in Java and Spring Framework.',
+          'Enhanced existing modules of the document management and business process automation system.',
+          'Participated in team development and maintenance of the corporate platform.'
+        ],
+        icon: 'haulmont'
       }
     ]
   },
@@ -93,7 +98,11 @@ export const contentEn: ResumeContent = {
     period: 'September 2015 — June 2020',
     institution: 'Samara University',
     degree: 'Fundamental Mathematics and Mechanics',
-    description: 'Ligula eu tempor congue eros est euismod turpis id tincidunt sapien risus.'
+    description: [
+      'Conducted research in group theory, focusing on triangle groups and their supercharacters.',
+      'Wrote and defended a thesis on the characters of the 4th-order triangle group.'
+    ],
+    icon: 'samara-university'
   },
   roadmap: {
     title: 'Technology Stack',
@@ -101,8 +110,8 @@ export const contentEn: ResumeContent = {
       {
         name: 'Languages',
         items: [
-          { id: 'java', name: 'Java' },
           { id: 'go', name: 'Go' },
+          { id: 'java', name: 'Java' },
           { id: 'python', name: 'Python' }
         ]
       },
@@ -111,10 +120,7 @@ export const contentEn: ResumeContent = {
         items: [
           { id: 'spring', name: 'Spring' },
           { id: 'spring-boot', name: 'Spring Boot' },
-          { id: 'maven', name: 'Maven' },
-          { id: 'gradle', name: 'Gradle' },
           { id: 'git', name: 'Git' },
-          { id: 'vim', name: 'Vim' },
           { id: 'claude-code', name: 'Claude Code' }
         ]
       },
