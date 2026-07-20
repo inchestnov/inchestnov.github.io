@@ -465,10 +465,21 @@ entry, etc.), not the servable static site, so a GitHub Actions workflow
 - Triggers on every push to `master` (and manually via
   `workflow_dispatch`).
 - Runs `npm ci && npm run build` (the same classic-script build described
-  in §1), then publishes `dist/` via `actions/upload-pages-artifact` +
-  `actions/deploy-pages`.
-- **One manual one-time step this workflow depends on:** the repo's Pages
-  source must be set to "GitHub Actions" (not "Deploy from a branch") under
-  Settings → Pages on GitHub — this can't be done from git/CLI without a
-  `gh`/API call, so if the live site isn't updating after a push, check
-  that setting first.
+  in §1), then force-pushes the contents of `dist/` to a separate
+  **`gh-pages` branch** (via `peaceiris/actions-gh-pages`) — deliberately
+  *not* master's own root, and *not* the `actions/upload-pages-artifact` +
+  `actions/deploy-pages` artifact mechanism (an earlier version of this
+  workflow used that; both are valid GitHub Pages deployment methods, this
+  repo now uses the branch-based one). Committing the build output onto
+  `master` itself was considered and rejected: it would overwrite the root
+  `index.html` that `npm run dev` depends on (breaking local development
+  after every pull), and a bot commit back onto `master` risks re-triggering
+  this same `on: push: branches: [master]` workflow in a loop. `gh-pages` is
+  a completely separate branch with no relationship to `master`'s `src/`
+  layout, so neither problem applies.
+- **One manual one-time step this workflow depends on:** under Settings →
+  Pages on GitHub, the repo's Pages source must be set to "Deploy from a
+  branch" → branch `gh-pages` → `/ (root)`. This can't be done from
+  git/CLI without a `gh`/API call — if the live site isn't updating after a
+  push, check that setting first (and that the `gh-pages` branch exists,
+  which it will after the workflow's first successful run).
