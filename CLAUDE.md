@@ -2,154 +2,269 @@
 
 ## 1. Project overview
 
-A single-page CV/resume site. Pure static HTML/CSS/JS, no backend, no build
-step, no npm. Open `index.html` directly in a browser (`file://...`) and it
-works fully — language switching (RU/EN), responsive layout, all included.
-The site has a single dark visual theme; there is no theme switching.
+A single-page CV/resume site, built as a Vite + React + TypeScript SPA. The
+site has a single dark visual theme; there is no theme switching.
 
-Do not introduce a bundler, framework, package manager, or dev server. Any
-change must keep working when the file is double-clicked and opened straight
-from disk.
+This project used to be pure static HTML/CSS/JS with zero build step,
+openable directly via `file://`. It was migrated to React + TS to take
+advantage of the component model, hooks, and typed data, then the build was
+adjusted so the *editing* workflow requires Node/npm while the *shipped*
+artifact keeps the original "just open the file" property:
+
+```
+npm install
+npm run dev        # local dev server (Vite, ES modules + HMR) — for editing
+npm run build       # typecheck + production build into dist/ — see below
+npm run preview     # serve the dist/ build over http, as a sanity check
+npm run typecheck   # tsc --noEmit only
+```
+
+**`npm run build` produces `dist/index.html`, openable directly via
+`file://` (double-click it, no server needed).** This works because
+`vite.config.ts` branches on the Vite command: `npm run dev` uses Vite's
+normal ES-module dev server (`<script type="module">`, required for HMR),
+but `npm run build` switches to Vite's **library mode** (`build.lib`,
+`formats: ['iife']`) instead of its normal app-build mode. This bundles the
+whole app — React, ReactDOM, Framer Motion, all components — into a single
+self-contained classic script (`dist/resume-app.js`, no `import`/`export`,
+wrapped in an IIFE) plus one CSS file (`dist/resume-app.css`). A classic
+`<script src="...">` is not subject to the `file://` module-loading block
+that `<script type="module">` hits in Chromium — that block is specifically
+about the `type="module"` mechanism, not about ES2015+ syntax, so an IIFE
+bundle using modern JS works fine under `file://` even though a
+module-based bundle doesn't.
+
+Because `build.lib` mode doesn't process `index.html` as an entry point
+(that's an app-build-only feature), `scripts/write-static-html.mjs` runs
+after `vite build` (see the `build` script above) and writes
+`dist/index.html` by hand — plain `<link rel="stylesheet">` +
+`<script src="...">` tags, no `type="module"`. If you change the Google
+Fonts `<link>` tags or any other `<head>` markup in the root `index.html`
+(the dev entry), mirror the change in `scripts/write-static-html.mjs` too —
+they're two separate files by necessity (dev needs a module entry, the
+shipped build needs a classic one) and don't stay in sync automatically.
+
+One real bug worth remembering if this build config is ever touched again:
+library-mode iife builds do **not** get Vite's usual automatic
+`process.env.NODE_ENV` replacement the way normal app builds do. Without
+the explicit `define: { 'process.env.NODE_ENV': JSON.stringify('production') }`
+in the `build` command branch of `vite.config.ts`, React and Framer
+Motion's internal dev/prod dual code paths both stay in the bundle
+(neither branch of `process.env.NODE_ENV === 'production' ? prod : dev` can
+be dead-code-eliminated), roughly doubling bundle size — and since
+`process` isn't a real global in the browser, the unresolved runtime check
+would throw immediately on load. This was caught by inspecting the built
+bundle for a lingering `process.env.NODE_ENV` token and verifying the fix
+with a headless-Chrome DOM dump of the `file://`-opened build.
+
+Do not introduce a second bundler or framework on top of this stack. Do not
+add a backend — this stays a client-only SPA (no server/API calls; content
+is bundled at build time, not fetched at runtime).
 
 ## 2. File structure
 
 ```
 resume/
-├── index.html            Page skeleton only: empty containers with fixed
-│                          IDs (e.g. #hero-name, #skills-grid). No hardcoded
-│                          copy — all visible text is injected by main.js.
-├── css/
-│   └── styles.css        All styling. Colors are CSS custom properties
-│                          defined once on :root (single dark palette; no
-│                          theme switching). Component rules never hardcode
-│                          colors — they only reference the variables.
-├── js/
-│   ├── icons.js           `iconMarkup` — a map of inline SVG strings used for
-│   │                       skill, contact, and roadmap icons. Brand icons are
-│   │                       copied verbatim from the matching file in
-│   │                       assets/icons/ (see below); email is hand-authored
-│   │                       (not a brand mark). No CDN icon fonts/sprites are
-│   │                       used, so icons render identically offline via
-│   │                       file://.
-│   ├── content_ru.js       `contentRu` — Russian copy (default language).
-│   ├── content_en.js       `contentEn` — English copy.
-│   └── main.js             App logic: language switching, localStorage
-│                            persistence, and the render*() functions that
-│                            populate index.html from the active content
-│                            object.
+├── index.html               Vite DEV entry point only (used by `npm run
+│                              dev`): empty #root + the Google Fonts <link>
+│                              tags + a module script pointing at
+│                              src/main.tsx. Not what ships — see §1 and
+│                              scripts/write-static-html.mjs below for the
+│                              actual dist/index.html the build produces.
+├── vite.config.ts            Branches on the Vite command (see §1):
+│                              `serve` (npm run dev) gets the normal
+│                              ES-module dev server; `build` (npm run build)
+│                              switches to library mode (iife format) to
+│                              produce a classic-script, file://-openable
+│                              bundle instead.
+├── scripts/
+│   └── write-static-html.mjs  Hand-writes dist/index.html after `vite
+│                              build` (library mode doesn't process HTML
+│                              entries) — plain <link>/<script> tags, no
+│                              type="module". Run automatically as part of
+│                              `npm run build`.
+├── tsconfig.json              Strict TS config (see §4a).
+├── tsconfig.node.json          Node-side config for vite.config.ts itself.
+├── package.json / package-lock.json
 ├── assets/
-│   ├── avatar-placeholder.svg   Placeholder avatar (silhouette).
-│   └── icons/              Saved copies of the official brand SVGs (java,
-│                            spring, spring-boot, go, python, maven, gradle,
-│                            git, vim, claude-code, docker, kubernetes,
-│                            gitlab, linux, kafka, postgresql, telegram,
-│                            linkedin, github) as downloaded from Simple
-│                            Icons (simpleicons.org, CC0). Kept here as the
-│                            source-of-truth reference copy; the actual
-│                            on-page markup lives inline in `js/icons.js`
-│                            (see below) since <img> tags can't be recolored
-│                            via CSS `currentColor`.
-├── requirements.md         Original project brief (reference only).
-└── CLAUDE.md               This file.
+│   └── icons/                Saved copies of the official brand SVGs (java,
+│                               spring, spring-boot, go, python, maven,
+│                               gradle, git, vim, claude-code, docker,
+│                               kubernetes, gitlab, linux, kafka, postgresql,
+│                               telegram, linkedin, github) as downloaded
+│                               from Simple Icons (simpleicons.org, CC0).
+│                               Reference-only, source-of-truth copies — NOT
+│                               part of the Vite build (not imported from
+│                               src/); the actual on-page markup lives inline
+│                               in src/icons/iconMarkup.ts (see §9).
+├── requirements.md            Original project brief (historical reference
+│                               only — describes the pre-migration static
+│                               site; superseded by this file where they
+│                               conflict).
+├── CLAUDE.md                  This file.
+└── src/
+    ├── main.tsx                Mounts <App /> into #root, imports styles/styles.css.
+    ├── App.tsx                 Top-level layout: wraps everything in
+    │                            LanguageProvider, renders the sections in
+    │                            page order (see §6).
+    ├── vite-env.d.ts            `/// <reference types="vite/client" />`.
+    ├── types.ts                 ResumeContent + sub-interfaces — the single
+    │                            typed shape both content.ru.ts/content.en.ts
+    │                            must satisfy.
+    ├── styles/
+    │   └── styles.css           All styling, unchanged in substance from the
+    │                            pre-migration stylesheet — same CSS custom
+    │                            properties on :root (single dark palette),
+    │                            same class names, same responsive
+    │                            breakpoints. Imported once from main.tsx.
+    ├── content/
+    │   ├── content.ru.ts        `export const contentRu: ResumeContent`.
+    │   └── content.en.ts        `export const contentEn: ResumeContent`.
+    ├── icons/
+    │   └── iconMarkup.ts        `iconMarkup` — a typed Record of inline SVG
+    │                            markup strings (see §9). `IconId` is
+    │                            `keyof typeof iconMarkup`.
+    ├── assets/
+    │   └── avatar-placeholder.svg   Placeholder avatar, imported as a module
+    │                            (`import avatarPlaceholder from '...'`) so
+    │                            Vite hashes/bundles it like any other asset.
+    ├── context/
+    │   └── LanguageContext.tsx   `LanguageProvider` — owns the active
+    │                            language, localStorage persistence, and the
+    │                            derived `content` object (see §4).
+    ├── hooks/
+    │   └── useLanguage.ts        Thin `useContext(LanguageContext)` wrapper
+    │                            used by every component that needs `content`.
+    └── components/
+        ├── Icon.tsx              Shared memoized icon renderer (see §9).
+        ├── TopBar/
+        │   ├── TopBar.tsx
+        │   ├── ContactList.tsx    Reused by both the topbar and the footer.
+        │   └── LanguageSwitcher.tsx  RU/EN buttons + the sliding active pill.
+        ├── HeroSection.tsx
+        ├── SkillsSection.tsx
+        ├── ExperienceSection/
+        │   ├── ExperienceSection.tsx
+        │   └── TimelineItem.tsx
+        ├── RoadmapSection/
+        │   ├── RoadmapSection.tsx
+        │   └── RoadmapNode.tsx
+        └── SiteFooter.tsx
 ```
 
 ## 3. Naming conventions
 
 - CSS classes: kebab-case, BEM-ish but flat (`skill-card`, `timeline-item`,
-  `contact-link`) — descriptive, no abbreviations.
+  `contact-link`) — descriptive, no abbreviations. Unchanged by the React
+  migration; components render the same class names the old static markup
+  used, so `styles.css` needed no rewrite.
 - CSS custom properties: `--color-*`, `--shadow-*` prefixes grouped by role
   (e.g. `--color-accent-primary`, `--color-text-secondary`).
-- JS variables/functions: camelCase, verb-first for functions
-  (`applyLanguage`, `renderSkills`).
-- File names: lowercase, hyphen/underscore as shown above; content files use
-  the `content_<lang>.js` pattern so a new locale is a predictable filename.
+- React components: PascalCase, one component per file, file name matches
+  the exported component (`HeroSection.tsx` exports `HeroSection`).
+- Hooks: camelCase, `use`-prefixed (`useLanguage`).
+- TS variables/functions: camelCase, verb-first for functions that do
+  something (`getContentForLanguage`, `setLanguage`).
+- File names: lowercase-with-dots for non-component modules, matching their
+  export (`content.ru.ts`, `iconMarkup.ts`); PascalCase for component files.
 
-## 4. Localization system (i18n)
+## 4. Localization & language state (i18n)
 
-- `js/content_ru.js` and `js/content_en.js` each declare a single global
-  constant (`contentRu`, `contentEn`) with an identical shape:
-  `meta`, `hero`, `languageSwitcher`, `about`, `skills`,
-  `experience`, `education`, `roadmap`, `footer`. `about` is a short
-  `{ text }` bio (kept to two sentences) rendered in the hero section, below
-  the name/role.
-- They are loaded as plain `<script src="...">` tags (not `fetch()`), because
-  `fetch()` of local JSON is blocked by the browser's CORS policy under
-  `file://`. Any new locale must follow this same pattern — never switch this
-  to JSON + fetch.
-- `js/main.js` holds `activeLanguageCode` / `activeContent` and a
-  `renderContent(content)` function that pushes every field from the content
-  object into the DOM. It never reads text from HTML.
-- **To add a new text string:** add the key to both `content_ru.js` and
-  `content_en.js` in the same nested location, then reference it from the
-  relevant `render*()` function in `main.js`.
-- **To add a new language (e.g. German):** create `js/content_de.js`
-  exporting `const contentDe = { ... }` with the same shape, include it via
-  `<script src="js/content_de.js">` in `index.html` (after the other content
-  scripts, before `main.js`), add a case for `'de'` in
-  `getContentForLanguage()`, and add a corresponding button to
-  `#language-switcher` in `index.html` (plus its click listener in
-  `initializeEventListeners()`).
-- Selected language persists in `localStorage` under
-  `resumeSelectedLanguage`; Russian is the default when nothing is stored.
+- `src/content/content.ru.ts` and `content.en.ts` each export a single typed
+  constant (`contentRu`, `contentEn`) satisfying the `ResumeContent`
+  interface from `src/types.ts`: `meta`, `hero`, `languageSwitcher`, `about`,
+  `skills`, `experience`, `education`, `roadmap`, `footer`. `about` is a
+  short `{ text }` bio rendered in the hero section, below the name/role.
+- They're loaded as plain ES module imports (`import { contentRu } from
+  './content/content.ru'`) — the old "must be `<script src>` tags, never
+  `fetch()`, because of `file://` CORS" constraint no longer applies, since
+  Vite bundles everything into the JS bundle at build time. There is still
+  no `fetch()` of content at runtime; it's just resolved by the bundler
+  instead of the browser.
+- `src/context/LanguageContext.tsx`'s `LanguageProvider` owns all language
+  state: `language` (a lazy `useState` initializer reads
+  `localStorage['resumeSelectedLanguage']` synchronously, defaulting to
+  `'ru'`), `setLanguage` (persists to the same localStorage key), and the
+  derived `content` object (`contentRu`/`contentEn` picked by `language`).
+  The provider `value` is `useMemo`'d over `[language, setLanguage,
+  content]` — every component that reads `content` goes through
+  `useLanguage()`, so this memoization avoids re-rendering the whole tree on
+  unrelated state changes. Two `useEffect`s sync `<html lang>` and
+  `document.title` (DOM state outside React's own tree).
+- **To add a new text string:** add the key to both `content.ru.ts` and
+  `content.en.ts` in the same nested location (and to the `ResumeContent`
+  interface in `types.ts` if it's a new field), then read it via
+  `useLanguage().content` in the relevant component.
+- **To add a new language (e.g. German):** create `src/content/content.de.ts`
+  exporting `contentDe: ResumeContent`, extend the `Language` union in
+  `types.ts` to `'ru' | 'en' | 'de'`, add a branch to
+  `getContentForLanguage()` in `LanguageContext.tsx`, and add a third
+  `<LanguageButton>` in `LanguageSwitcher.tsx`.
+
+## 4a. TypeScript configuration
+
+`tsconfig.json` is strict (`strict: true`, plus `noUnusedLocals`,
+`noUnusedParameters`, `noUncheckedIndexedAccess`). `noUncheckedIndexedAccess`
+matters concretely for icon lookups (`iconMarkup[id]` types as `string |
+undefined`), which is exactly why `Icon.tsx` and `RoadmapNode.tsx` both
+handle the "no matching icon" case explicitly rather than assuming a hit.
+`jsx: "react-jsx"` (the automatic runtime) — no `import React` needed per
+file. `moduleResolution: "Bundler"` matches Vite's own resolution. Run
+`npm run typecheck` (`tsc --noEmit`) any time — it's also the first step of
+`npm run build`, so a type error blocks the build.
 
 ## 5. Color palette
 
 - All colors are CSS custom properties declared once under `:root` in
-  `css/styles.css` (a single dark palette — the site has no theme switching).
-  Component rules never hardcode colors — they only reference the variables.
+  `src/styles/styles.css` (a single dark palette — the site has no theme
+  switching). Component rules never hardcode colors — they only reference
+  the variables. Unchanged by the React migration.
 - **To change a color:** edit the variable value in the `:root` block.
 - **To add a new value:** declare the variable in `:root`, then use
   `var(--the-new-variable)` wherever needed.
 
 ## 6. Page section layout
 
-`index.html` is a single vertical stack of full-width sections (no sidebar —
-everything is one column), below a slim, sticky top bar. None of these
-sections have a visible heading or a divider line between them — accessible
-names are set as `aria-label` on the section element via JS instead of a
-visible `<h2>`, and there is no `border-top`/`border-bottom` between
+`App.tsx` renders a single vertical stack of full-width sections (no sidebar
+— everything is one column), below a slim, sticky top bar — the same
+layout as before the migration, now expressed as JSX components instead of
+DOM containers populated by `render*()` functions. None of these sections
+have a visible heading or a divider line between them — accessible names
+are set as `aria-label` directly in each section component's JSX instead of
+a visible `<h2>`, and there is no `border-top`/`border-bottom` between
 sections (the sticky top bar is the one exception — it keeps its
 `border-bottom` since it's persistent nav chrome, not a content section):
 
-- `.page-topbar` — full-width bar (`position: sticky; top: 0`, stays visible
-  while scrolling) holding the contact list (`#contact-list`, icon-only) and
-  the language switcher (`#language-switcher`).
-- `.hero-section` (`#hero-section`) — full-width section directly below the
-  top bar, above Skills. `.hero-inner` is a flex row, centered as a group
-  (`justify-content: center`): avatar (`.hero-avatar-wrapper` +
-  `#hero-avatar-image`) on the left, `.hero-details` on the right holding
-  name (`#hero-name`), role (`#hero-role`), and the short About blurb
-  (`#about-text`, plain paragraph). Stacks to a centered column below 600px
-  (`.hero-inner { flex-direction: column }`).
-- `.skills-banner` (`#skills-section`) — full-width section below the hero,
-  above main content. `content.skills.title` is applied as an `aria-label`
-  on the section (no visible heading); holds `#skills-grid`, rendered as
-  borderless icon + name pairs (icon left, name vertically centered to its
-  right; no card background/border), grouped into explicit centered rows.
-  `content.skills` has a `rows` field — an array of arrays of `{ id, name }`
-  items, e.g. `rows: [[{id:'go',...}, {id:'java',...}], [{id:'postgresql',...}, ...]]`
-  — each inner array becomes one `.skills-row` (flexbox, wraps and
-  centers its own items independently of other rows).
-  `renderSkills(skillRows)` in `main.js` loops rows then items; **to
-  change which skills appear on which row**, edit the `rows` arrays in
-  both `content_ru.js` and `content_en.js` (keep them in sync). The first
-  row is styled larger (`.skills-row:first-child`) to feature its skills.
-- `.main-content` (`main.main-content-inner` centered at max-width 1120px)
-  — a single `.experience-section` (`#experience-section`, `aria-label` from
-  `content.experience.title`) holding one merged `#experience-timeline`
-  list: Experience jobs first (most-recent-first), followed by the single
-  Education entry as one more `.timeline-item` appended to the *same* list
-  — there is no separate Education section or heading (see §7).
-- `.roadmap-section` (`#roadmap-section`, `aria-label` from
-  `content.roadmap.title`) — full-width tech-stack diagram below main
-  content, above the footer (see §8).
-- `.site-footer` — full-width, below `.roadmap-section`.
+- `<TopBar />` (`.page-topbar`, `position: sticky; top: 0`) — holds
+  `<ContactList>` (icon-only, `.contact-list`) and `<LanguageSwitcher />`.
+- `<HeroSection />` (`.hero-section`) — directly below the top bar, above
+  Skills. `.hero-inner` is a flex row, centered as a group: avatar
+  (`.hero-avatar-wrapper`) on the left, `.hero-details` on the right holding
+  name (`<h1>`), role, and the About blurb. Stacks to a centered column
+  below 600px.
+- `<SkillsSection />` (`.skills-banner`) — below the hero, above main
+  content. `content.skills.title` is applied as the section's `aria-label`;
+  renders `content.skills.rows` (an array of arrays of `{ id, name }`) as
+  one `.skills-row` per inner array — each row wraps/centers its own items
+  independently. **To change which skills appear on which row:** edit the
+  `rows` arrays in both `content.ru.ts` and `content.en.ts` (keep them in
+  sync). The first row is styled larger (`.skills-row:first-child`).
+- `<main className="main-content">` (`.main-content-inner`, centered at
+  max-width 1120px) wraps a single `<ExperienceSection />` (`aria-label`
+  from `content.experience.title`) holding one merged
+  `.experience-timeline` list: Experience jobs first (most-recent-first),
+  followed by the single Education entry as one more `<TimelineItem>`
+  appended to the *same* list — there is no separate Education section or
+  heading (see §7). This `<main>` wrapper lives in `App.tsx`, not inside
+  `ExperienceSection.tsx`.
+- `<RoadmapSection />` (`aria-label` from `content.roadmap.title`) —
+  full-width tech-stack diagram below main content, above the footer (see
+  §8).
+- `<SiteFooter />` — below `<RoadmapSection />`.
 
-The underlying content objects, IDs, and render functions in `main.js`
-(`renderSkills`, `renderTimeline`, `renderRoadmap`) are independent of this
-placement — moving a block between sections is purely an
-`index.html`/`styles.css` change; no `main.js` change is required as long as
-the element IDs are preserved.
+Moving a section is a pure `App.tsx` change (reorder the JSX) — no
+component internals need to change as long as each section still reads
+`content` via `useLanguage()`.
 
 ## 7. Experience timeline data structure
 
@@ -161,14 +276,15 @@ marker dot centered on that line per entry (`.timeline-marker`, also
 `:nth-child(even)` cards sit in the right half (`margin-left: calc(50% + 24px)`).
 Below 900px this collapses to the classic single-column layout: the line
 and markers move to a fixed `left: 5px`, and every card (odd or even) gets
-`margin-left: 32px` instead of alternating — the zigzag only reads correctly
-with room on both sides of a center line, which narrow viewports don't have.
+`margin-left: 32px` instead of alternating. This is 100% unchanged CSS —
+purely `nth-child`/`@media`, no JS/React involvement, so it keeps working
+regardless of how many `<TimelineItem>`s render.
 
-Defined per-language inside `content_ru.js` / `content_en.js` under
-`experience.jobs`, an array ordered **most-recent-first** (top of the list =
-current/latest job — also the first/leftmost card in the zigzag):
+Defined per-language inside `content.ru.ts` / `content.en.ts` under
+`experience.jobs`, typed as `ExperienceJob[]` in `types.ts`, ordered
+**most-recent-first**:
 
-```js
+```ts
 {
   company: 'Company Name',
   role: 'Job title',
@@ -177,122 +293,182 @@ current/latest job — also the first/leftmost card in the zigzag):
 }
 ```
 
-`renderTimeline(jobs, education)` in `main.js` iterates `jobs` and builds one
-`<li class="timeline-item">` per entry (a `.timeline-marker` dot plus a
-`.timeline-content` card holding the period, company, role and bullet
-points) into `#experience-timeline`. **To add a new job:** insert a new
-object at the *top* of the `jobs` array in *both* `content_ru.js` and
-`content_en.js` (keep both files in sync) — no HTML or CSS changes are
-required (the new item just inherits whichever side its new odd/even
-position lands on).
+`ExperienceSection.tsx` maps `jobs` to one `<TimelineItem>` each, then
+appends one more `<TimelineItem>` built from `content.education` (`{ period,
+institution, degree, description }` maps to `TimelineItem`'s `{ period,
+company, role, points }` props — `institution` → heading, `degree` →
+subheading, `description` → the sole entry in `points`). **To add a new
+job:** insert a new object at the *top* of the `jobs` array in *both*
+`content.ru.ts` and `content.en.ts` — no component or CSS changes required.
 
-Education (`content_ru.js`/`content_en.js` under `education`) reuses this
-same visual language deliberately: `{ period, institution, degree,
-description }` maps to the timeline's `{ period, company, role, points }`
-shape (`institution` → heading, `degree` → subheading, `description` →
-wrapped as a single `<li>` inside `.timeline-points`). `renderTimeline()`
-appends it as one *more* `.timeline-item` onto the end of the same
-`#experience-timeline` list (after all jobs) — there is no separate
-Education section, heading, or list; it's the last entry of the combined
-timeline, so it renders identical to an Experience card and simply reads as
-the oldest/foundational entry. If education ever needs multiple entries,
-give it a `jobs`-style array and loop over it the same way jobs are looped.
+`TimelineItem` is a plain (non-memoized) component — its props change on
+every language switch by definition, so `React.memo` would provide no
+benefit there (see §10a). It does use Framer Motion for a fade/slide-in
+`whileInView` reveal and a `whileHover` lift on the card — both animate only
+`opacity`/`transform` on the `<motion.li>`/`<motion.div>` wrapper elements
+themselves, never on `.timeline-marker` or `.experience-timeline::before`
+(which keep their own CSS `transform: translateX(-50%)` centering
+untouched — see §10b for why that separation matters).
 
 ## 8. Roadmap (tech-stack diagram)
 
-`.roadmap-section` renders a "roadmap style" diagram of technologies grouped
-into categories — a horizontal row of category columns on desktop, joined by
-a connecting line across each column's marker dot (`.roadmap::before` +
-`.roadmap-group-marker`), with each column's items shown as icon+name boxes
-(`.roadmap-node`) connected by their own vertical line
-(`.roadmap-nodes::before`). Below 900px it drops to 2 columns and below
-600px to 1, and the horizontal top connector is hidden at both those
-breakpoints since it only reads correctly as a single row.
+`<RoadmapSection />` renders a "roadmap style" diagram of technologies
+grouped into categories — a horizontal row of category columns on desktop,
+joined by a connecting line across each column's marker dot
+(`.roadmap::before` + `.roadmap-group-marker`), with each column's items
+shown as icon+name boxes (`.roadmap-node`) connected by their own vertical
+line (`.roadmap-nodes::before`). Below 900px it drops to 2 columns and below
+600px to 1 — unchanged pure-CSS behavior, same as §7.
 
-Defined per-language inside `content_ru.js` / `content_en.js` under
-`roadmap.groups`, an array of `{ name, items }` where `items` is an array of
-`{ id, name }` (the `id` looks up the matching entry in `iconMarkup` from
-`js/icons.js`, same convention as the Skills banner):
+Defined per-language inside `content.ru.ts` / `content.en.ts` under
+`roadmap.groups`, typed as `RoadmapGroup[]` in `types.ts`:
 
-```js
+```ts
 {
   name: 'Category name',
   items: [{ id: 'tech-a', name: 'Tech A' }, { id: 'tech-b', name: 'Tech B' }, ...]
 }
 ```
 
-`renderRoadmap()` in `main.js` builds one `.roadmap-group` per entry (marker
-dot + title + `.roadmap-nodes` list of `.roadmap-node` boxes, each an icon +
-name pair). If `iconMarkup[item.id]` has no matching entry, the node renders
-name-only rather than a missing/incorrect icon (a safety net for future
-additions, not currently exercised by any roadmap item — see §9 for the
-`activemq` case, which *does* have an icon, just not from Simple Icons).
-**To add or change a category/technology:** edit the `groups` array in
-*both* `content_ru.js` and `content_en.js` (keep both files and the category
-order in sync), and add a matching entry to `iconMarkup` in `js/icons.js`
-if a brand icon is available (see §9) — no other HTML or CSS changes are
-required.
+`RoadmapSection.tsx` renders one `.roadmap-group` per entry (marker dot +
+title + a `<RoadmapNode>` per item). `RoadmapNode` checks `id in iconMarkup`
+and renders name-only (no icon span at all) if there's no match — the same
+"safety net for future additions" behavior as before, now enforced by
+`noUncheckedIndexedAccess` in the type system rather than a runtime-only
+convention. **To add or change a category/technology:** edit the `groups`
+array in *both* `content.ru.ts` and `content.en.ts`, and add a matching
+entry to `iconMarkup` in `src/icons/iconMarkup.ts` if a brand icon is
+available (see §9) — `RoadmapItem.id`/`SkillItem.id` stay plain `string` in
+`types.ts` (not the closed `IconId` union) specifically so this fallback
+case keeps type-checking.
 
 ## 9. Icon assets
 
 - Brand icons (java, spring, spring-boot, go, python, maven, gradle, git,
   vim, claude-code, docker, kubernetes, gitlab, linux, kafka, postgresql,
   telegram, linkedin, github) are official marks from Simple Icons (CC0),
-  saved as individual files in `assets/icons/*.svg` and copied inline into
-  `iconMarkup` in `js/icons.js`. `iconMarkup` keys that aren't valid bare
-  JS identifiers (contain a hyphen, e.g. `spring-boot`, `claude-code`) are
-  quoted string keys — everything else follows normal object-literal syntax.
+  saved as individual files in `assets/icons/*.svg` and copied inline,
+  byte-for-byte, into `iconMarkup` in `src/icons/iconMarkup.ts`. This
+  migration ported every entry verbatim (verified with a diff script against
+  the pre-migration `js/icons.js`) — no path data was retyped by hand.
 - `activemq` is the one exception to the Simple Icons rule: Apache ActiveMQ
   has no entry there (checked both "ActiveMQ" and "Apache Artemis" — neither
   exists; only the generic, non-product-specific Apache Software Foundation
   feather logo does, which was deliberately *not* used since it isn't
   ActiveMQ-specific). Instead `iconMarkup.activemq` holds the official
-  ActiveMQ "flower" symbol, cropped out of the full logo (source: the
-  official logo asset, which also carries an "Apache ACTIVE MQ" wordmark —
-  that text was removed since it would duplicate the adjacent
-  `.roadmap-node-name` label; the crop's `viewBox` was computed from the
-  retained elements' actual coordinates, not eyeballed), with `viewBox`
-  portrait rather than square, so it letterboxes inside the (square)
-  `.roadmap-node-icon` box instead of filling it edge-to-edge. Its five
-  petals **do** use `fill="currentColor"` (recolored to the site's blue
-  accent, like every other icon), but the white connector dots/lines stay
-  literal `#fff` — coloring everything the same blue would make the whole
-  glyph collapse into an indistinct blob, since the dots/lines only read as
-  a shape by contrasting against the petals.
-  `assets/icons/activemq.svg` is the one case where the reference copy
-  **intentionally does not match** `iconMarkup.activemq` exactly: it keeps
-  the original five official brand colors on the petals (the true
-  source-of-truth for what the logo actually looks like), while the inline
-  version in `js/icons.js` carries the site-specific blue recolor. If
-  ActiveMQ is ever dropped from the roadmap, remove both files together;
-  don't leave one without the other.
-- The `<path>` data must match `assets/icons/*.svg` exactly — always copy the
-  saved file's contents rather than retyping it, so the glyph stays pixel
-  accurate to the source. Each is wrapped as
+  ActiveMQ "flower" symbol, cropped out of the full logo (the original also
+  carries an "Apache ACTIVE MQ" wordmark, removed since it would duplicate
+  the adjacent `.roadmap-node-name` label), with a portrait `viewBox` rather
+  than square, so it letterboxes inside the (square) `.roadmap-node-icon`
+  box instead of filling it edge-to-edge. Its five petals **do** use
+  `fill="currentColor"` (recolored to the site's blue accent, like every
+  other icon), but the white connector dots/lines stay literal `#fff` —
+  coloring everything the same blue would make the whole glyph collapse
+  into an indistinct blob. `assets/icons/activemq.svg` is the one case
+  where the reference copy **intentionally does not match**
+  `iconMarkup.activemq` exactly: it keeps the original five official brand
+  colors on the petals (the true source-of-truth for what the logo actually
+  looks like), while the inline version carries the site-specific blue
+  recolor. If ActiveMQ is ever dropped from the roadmap, remove both files
+  together.
+- The markup data must match `assets/icons/*.svg` exactly — always copy the
+  saved file's contents rather than retyping it. Each is wrapped as
   `<svg viewBox="0 0 24 24" fill="currentColor" ...>` (no `fill` attribute on
   the `<path>` itself) so the icon inherits the surrounding text color and
-  recolors correctly via CSS (e.g. on hover). This rule is about geometry,
-  not necessarily fill color — `activemq` is the one deliberate exception
-  where inline fill colors diverge from the reference file (see above).
+  recolors correctly via CSS (e.g. on hover). `activemq` is the one
+  deliberate exception where inline fill colors diverge from the reference
+  file (see above).
+- **`Icon.tsx`** renders `iconMarkup[id]` via `dangerouslySetInnerHTML` —
+  deliberate, not an oversight: the markup is 100% static, defined in our
+  own source file, never influenced by user/network input, which is the
+  textbook safe case for it. Parsing each icon into real JSX (e.g. via a
+  build-time SVGR transform) was considered and rejected: it would risk
+  mangling the intentionally-exact multi-part `activemq` markup
+  (`<use>`/`<defs>`/mixed `currentColor`+literal-`#fff` fills) for no safety
+  benefit. `Icon` returns `null` if `id` has no matching key (the
+  `RoadmapNode` name-only fallback from §8), and is wrapped in `React.memo`
+  — a `React.memo` case that's real, not a checkbox: `id` is a plain string
+  prop, so unrelated re-renders of a parent card (e.g. a hover animation on
+  a sibling) skip re-parsing the SVG string.
 - **To update or add a brand icon:** download the official SVG (e.g. from
   `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/<slug>.svg`), save
   it as `assets/icons/<name>.svg`, then copy its `<path>` markup into the
-  matching `iconMarkup` entry in `js/icons.js`, keeping the
-  `fill="currentColor"` wrapper. Do not reference the file at runtime via
-  `<img>`/`<use>` — external SVG references don't reliably recolor and can
-  be blocked under `file://`.
+  matching `iconMarkup` entry in `src/icons/iconMarkup.ts`, keeping the
+  `fill="currentColor"` wrapper.
 - `email` is not a brand mark — it stays a hand-authored stroke icon and is
   not tied to any file in `assets/icons/`.
 
-## 10. Constraints
+## 10. React architecture notes
 
-- No build tools, no bundlers, no npm/yarn dependencies, no dev server.
-- No `fetch()` of local files (breaks under `file://` due to CORS) — all data
-  is loaded via `<script>` tags declaring global `const` objects.
-- Everything must keep working by simply opening `index.html` from disk.
-- Fonts are loaded from Google Fonts via CDN `<link>` tags; this is the only
-  network dependency and is allowed to fail gracefully (falls back to system
-  sans-serif) when offline.
-- All icons (skills, contacts) are inline SVG strings defined in
-  `js/icons.js` — do not switch these to an external icon font/CDN sprite,
-  since that would make the icons dependent on network access.
+### 10a. Memoization — applied deliberately, not as a checklist
+
+| Optimization | Applied? | Why |
+|---|---|---|
+| `useMemo` on the `LanguageContext` provider value | Yes | Real, high-value: avoids re-rendering every consumer (nearly every component) on unrelated state changes. |
+| `useCallback` on `setLanguage` | Yes | Required for `React.memo` on the language buttons to have any effect — a stable callback reference is what makes that memo meaningful. |
+| `React.memo` on the language switcher buttons | Yes | Cheap, composes with the callback above. |
+| `React.memo` on `Icon` | Yes | Mild but real: skips re-parsing static SVG markup when a sibling's hover animation re-renders the parent. |
+| `React.memo` on `TimelineItem` / `RoadmapNode` / skill cards | **No, intentionally** | Their props change on every language switch by definition — memoizing them would compare props that are guaranteed to differ, i.e. dead weight, not a real optimization. |
+| `useMemo` on icon lookups | **No** | Plain object property access (`iconMarkup[id]`) is not a computation; there's nothing to memoize. |
+| `useMemo` on the footer copyright year substitution | Yes, minor | Cheap and harmless; avoids a string allocation per render. Marginal, not a big win. |
+| `React.lazy` / `Suspense` for `RoadmapSection` | **No, intentionally** | It's unconditionally rendered on first paint (not conditionally shown later), so code-splitting it adds a network round-trip with zero deferred-work benefit — and dynamic `import()` chunk loading is unreliable/blocked under `file://` in Chromium, which would work against portability for no upside. |
+| Explicit `width`/`height` on the avatar `<img>` | Yes | Real CLS (layout shift) prevention. |
+| `loading="lazy"` on the avatar `<img>` | **No** | It's above-the-fold and renders immediately; lazy-loading it could only delay first paint, not help it. |
+
+If you're about to add a new `React.memo`/`useMemo`/`useCallback`, ask
+whether the memoized value's inputs are actually stable across the renders
+you're trying to skip — if they're not, the memoization is a no-op at best.
+
+### 10b. Framer Motion usage
+
+Animations (`whileInView` fade/slide-in reveals, `whileHover` lifts, the
+sliding "active pill" behind the language switcher via a shared `layoutId`)
+are scoped strictly to `opacity` and `transform` (`x`/`y`/`scale`) on
+wrapper elements — never on `.timeline-marker`, `.roadmap-group-marker`, or
+the `::before` connector lines, all of which carry their own static CSS
+`transform: translateX(-50%)` for centering. Framer Motion sets `transform`
+via inline style, which would silently clobber that CSS rule if applied to
+the same element. All responsive breakpoint logic (§7, §8) stays pure CSS
+`@media`/`nth-child` — no JS-driven layout was introduced by the animation
+work. Every animated component calls Framer Motion's built-in
+`useReducedMotion()` and skips its motion props entirely when it returns
+`true`.
+
+## 11. Constraints
+
+- No backend, no runtime `fetch()` of content — all copy is bundled at
+  build time via ES module imports.
+- Editing requires Node/npm (`npm run dev` for local development), but the
+  shipped artifact does not: `npm run build` produces a `dist/index.html`
+  that reopens the original "just open the file" property via a classic
+  (non-module) IIFE bundle — see §1 for the full mechanism and why a plain
+  `npm run build` from `dist/` (the app-mode default) wouldn't have worked.
+- Fonts are loaded from Google Fonts via CDN `<link>` tags in `index.html`;
+  this is the only network dependency and is allowed to fail gracefully
+  (falls back to system sans-serif) when offline.
+- All icons (skills, contacts, roadmap) are inline SVG strings defined in
+  `src/icons/iconMarkup.ts` — do not switch these to an external icon
+  font/CDN sprite/`<img>` reference, since that would make the icons
+  dependent on network access and unable to recolor via `currentColor`.
+- Single dark theme only — no light/dark toggle. This was explicitly kept
+  out of scope during the React migration (not requested, and the project's
+  visual identity is one deliberate dark palette).
+
+## 12. Deployment
+
+This repo is `inchestnov.github.io` — a GitHub Pages user site, published at
+the repo root with no build step of its own. Since the React migration, the
+repo's `master` branch holds *source* (`src/`, `index.html` as the Vite dev
+entry, etc.), not the servable static site, so a GitHub Actions workflow
+(`.github/workflows/deploy.yml`) builds and deploys it automatically:
+
+- Triggers on every push to `master` (and manually via
+  `workflow_dispatch`).
+- Runs `npm ci && npm run build` (the same classic-script build described
+  in §1), then publishes `dist/` via `actions/upload-pages-artifact` +
+  `actions/deploy-pages`.
+- **One manual one-time step this workflow depends on:** the repo's Pages
+  source must be set to "GitHub Actions" (not "Deploy from a branch") under
+  Settings → Pages on GitHub — this can't be done from git/CLI without a
+  `gh`/API call, so if the live site isn't updating after a push, check
+  that setting first.

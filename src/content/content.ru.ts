@@ -1,16 +1,13 @@
-/**
- * English localization content.
- * Loaded as a plain script (not fetched as JSON) so the site keeps working
- * when opened directly via file:// without triggering CORS restrictions.
- */
-const contentEn = {
+import type { ResumeContent } from '../types';
+
+export const contentRu: ResumeContent = {
   meta: {
-    pageTitle: 'Igor Chestnov — Software Engineer | Resume'
+    pageTitle: 'Игорь Честнов — Software Engineer | Резюме'
   },
   hero: {
-    name: 'Igor Chestnov',
+    name: 'Игорь Честнов',
     role: 'Software Engineer',
-    avatarAlt: 'Profile avatar placeholder',
+    avatarAlt: 'Аватар-заглушка профиля',
     contacts: {
       telegram: {
         label: 'Telegram',
@@ -35,10 +32,10 @@ const contentEn = {
     }
   },
   languageSwitcher: {
-    ariaLabel: 'Language switcher'
+    ariaLabel: 'Переключатель языка'
   },
   skills: {
-    title: 'Key Skills',
+    title: 'Ключевые навыки',
     rows: [
       [
         { id: 'go', name: 'Go' },
@@ -55,12 +52,12 @@ const contentEn = {
     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
   },
   experience: {
-    title: 'Work Experience',
+    title: 'Опыт работы',
     jobs: [
       {
         company: 'Ozon Fintech',
         role: 'Principal Software Engineer',
-        period: 'December 2023 — Present',
+        period: 'Декабрь 2023 — настоящее время',
         points: [
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -69,9 +66,9 @@ const contentEn = {
         ]
       },
       {
-        company: 'Moscow Exchange (MOEX)',
+        company: 'Московская Биржа (MOEX)',
         role: 'Senior Java Developer',
-        period: 'October 2021 — December 2023',
+        period: 'Октябрь 2021 — Декабрь 2023',
         points: [
           'In reprehenderit in voluptate velit esse cillum dolore eu fugiat.',
           'Nulla pariatur excepteur sint occaecat cupidatat non proident.',
@@ -82,7 +79,7 @@ const contentEn = {
       {
         company: 'Haulmont',
         role: 'Java Developer',
-        period: 'January 2020 — October 2021',
+        period: 'Январь 2020 — Октябрь 2021',
         points: [
           'Nullam varius turpis et commodo pharetra est eros bibendum elit.',
           'Nec luctus magna felis sollicitudin mauris integer in mauris.',
@@ -93,16 +90,16 @@ const contentEn = {
     ]
   },
   education: {
-    period: 'September 2015 — June 2020',
-    institution: 'Samara University',
-    degree: 'Fundamental Mathematics and Mechanics',
+    period: 'сентябрь 2015 — июнь 2020',
+    institution: 'Самарский университет',
+    degree: 'Фундаментальная математика и механика',
     description: 'Ligula eu tempor congue eros est euismod turpis id tincidunt sapien risus.'
   },
   roadmap: {
-    title: 'Technology Stack',
+    title: 'Технологии',
     groups: [
       {
-        name: 'Languages',
+        name: 'Языки',
         items: [
           { id: 'java', name: 'Java' },
           { id: 'go', name: 'Go' },
@@ -110,7 +107,7 @@ const contentEn = {
         ]
       },
       {
-        name: 'Tools',
+        name: 'Инструменты',
         items: [
           { id: 'spring', name: 'Spring' },
           { id: 'spring-boot', name: 'Spring Boot' },
@@ -122,7 +119,7 @@ const contentEn = {
         ]
       },
       {
-        name: 'Deploy',
+        name: 'Деплой',
         items: [
           { id: 'docker', name: 'Docker' },
           { id: 'kubernetes', name: 'Kubernetes' },
@@ -132,7 +129,7 @@ const contentEn = {
         ]
       },
       {
-        name: 'Databases',
+        name: 'Базы',
         items: [
           { id: 'postgresql', name: 'PostgreSQL' },
           { id: 'kafka', name: 'Kafka' },
@@ -142,6 +139,6 @@ const contentEn = {
     ]
   },
   footer: {
-    copyrightText: '© {year} Igor Chestnov. All rights reserved.'
+    copyrightText: '© {year} Игорь Честнов. Все права защищены.'
   }
 };

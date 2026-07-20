@@ -3,70 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">Резюме</title>
+  <title>Резюме</title>
   <meta name="description" content="Одностраничное резюме backend-разработчика">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="page-topbar">
-    <div class="section-inner topbar-inner">
-      <ul class="contact-list" id="contact-list"></ul>
-      <div class="language-switcher" id="language-switcher" role="group">
-        <button type="button" class="language-button" id="language-button-ru" data-lang="ru" aria-pressed="true">RU</button>
-        <button type="button" class="language-button" id="language-button-en" data-lang="en" aria-pressed="false">EN</button>
-      </div>
-    </div>
-  </div>
-
-  <section class="hero-section" id="hero-section">
-    <div class="hero-inner">
-      <div class="hero-avatar-wrapper">
-        <img class="hero-avatar" src="assets/avatar-placeholder.svg" alt="" id="hero-avatar-image">
-      </div>
-      <div class="hero-details">
-        <div class="hero-heading">
-          <h1 class="hero-name" id="hero-name"></h1>
-          <span class="hero-heading-separator" aria-hidden="true">·</span>
-          <p class="hero-role" id="hero-role"></p>
-        </div>
-        <p class="about-text" id="about-text"></p>
-      </div>
-    </div>
-  </section>
-
-  <section class="skills-banner" id="skills-section">
-    <div class="skills-banner-inner">
-      <div class="skills-grid" id="skills-grid"></div>
-    </div>
-  </section>
-
-  <main class="main-content">
-    <div class="main-content-inner">
-      <section class="experience-section" id="experience-section">
-        <ol class="experience-timeline" id="experience-timeline"></ol>
-      </section>
-    </div>
-  </main>
-
-  <section class="roadmap-section" id="roadmap-section">
-    <div class="roadmap-inner">
-      <div class="roadmap" id="roadmap-groups"></div>
-    </div>
-  </section>
-
-  <footer class="site-footer">
-    <div class="section-inner">
-      <ul class="footer-contact-list" id="footer-contact-list"></ul>
-      <p class="footer-copyright" id="footer-copyright"></p>
-    </div>
-  </footer>
-
-  <script src="js/icons.js"></script>
-  <script src="js/content_ru.js"></script>
-  <script src="js/content_en.js"></script>
-  <script src="js/main.js"></script>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
