@@ -687,6 +687,14 @@ button {
     justify-content: flex-start;
   }
 
+  .skills-row:first-child {
+    row-gap: 4px;
+  }
+
+  .skills-row:first-child .skill-card {
+    padding: 0;
+  }
+
   .roadmap-inner {
     padding: 0 16px;
   }

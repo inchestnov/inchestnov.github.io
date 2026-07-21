@@ -355,13 +355,29 @@ case keeps type-checking.
 
 ## 9. Icon assets
 
-- Brand icons (java, spring, spring-boot, go, python, maven, gradle, git,
+- Brand icons (java, spring, spring-boot, python, maven, gradle, git,
   vim, claude-code, docker, kubernetes, gitlab, linux, kafka, postgresql,
   telegram, linkedin, github) are official marks from Simple Icons (CC0),
   saved as individual files in `assets/icons/*.svg` and copied inline,
   byte-for-byte, into `iconMarkup` in `src/icons/iconMarkup.ts`. This
   migration ported every entry verbatim (verified with a diff script against
   the pre-migration `js/icons.js`) — no path data was retyped by hand.
+- `go` is sourced from Wikimedia Commons's copy of the official Go wordmark
+  ("Go Logo Blue",
+  `upload.wikimedia.org/wikipedia/commons/0/05/Go_Logo_Blue.svg`), not
+  Simple Icons. Simple Icons' own "go" entry was used originally (like
+  every other brand icon here), but its `0 0 24 24` viewBox has the
+  wordmark's ink occupying only the middle third vertically, leaving large
+  built-in blank margins above and below baked into the coordinate space
+  itself — at the same icon-box size as the other, genuinely square brand
+  icons, it rendered visibly smaller. Cropping that viewBox down to the
+  wordmark's own bounding box was tried first and worked, but the source
+  was swapped out entirely instead, since this official artwork's own
+  viewBox (`0 0 205.4 76.7`) is already cropped tightly to the design with
+  no extra margin, needing no adjustment. `assets/icons/go.svg` is the
+  untouched reference copy (original brand blue `#00ACD7`); `iconMarkup.go`
+  recolors it to `fill="currentColor"` like every other icon, same as the
+  Simple Icons entries, just from a different upstream source.
 - `activemq` is the one exception to the Simple Icons rule: Apache ActiveMQ
   has no entry there (checked both "ActiveMQ" and "Apache Artemis" — neither
   exists; only the generic, non-product-specific Apache Software Foundation
