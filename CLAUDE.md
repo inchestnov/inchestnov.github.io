@@ -245,10 +245,27 @@ sections (the sticky top bar is the one exception — it keeps its
 - `<SkillsSection />` (`.skills-banner`) — below the hero, above main
   content. `content.skills.title` is applied as the section's `aria-label`;
   renders `content.skills.rows` (an array of arrays of `{ id, name }`) as
-  one `.skills-row` per inner array — each row wraps/centers its own items
-  independently. **To change which skills appear on which row:** edit the
+  one `.skills-row` per inner array. `.skills-grid` lays the row groups out
+  as `flex-direction: row; flex-wrap: wrap` on desktop, so — with only two
+  groups and enough width — all skills read as one continuous horizontal
+  row rather than two stacked ones; `.skills-banner-inner` caps at
+  `max-width: 1120px` (matching the hero/main-content/roadmap sections) so
+  that single row lines up with the rest of the page instead of stretching
+  full-bleed, and `.skill-icon` is a uniform 64px on desktop (all skills
+  the same size) so five icons + names reliably fit that width without
+  wrapping. Below 600px, `.skills-grid` switches to
+  `flex-direction: column`, stacking the groups instead (each `.skills-row`
+  also flips to a column internally at that width, so individual skills
+  within a group stack too — see the icon-list arrangement below); only on
+  mobile does the first group get styled larger
+  (`.skills-row:first-child .skill-icon`/`.skill-name`, 112px/26px vs the
+  64px/22px default) to feature its skills and a tighter `row-gap` (`4px`
+  vs `32px` elsewhere) between its own stacked items — both are
+  mobile-only precisely because the desktop single row needs uniform sizing
+  to fit its width budget, while the mobile vertical list has no such
+  constraint. **To change which skills appear in which group:** edit the
   `rows` arrays in both `content.ru.ts` and `content.en.ts` (keep them in
-  sync). The first row is styled larger (`.skills-row:first-child`).
+  sync).
 - `<main className="main-content">` (`.main-content-inner`, centered at
   max-width 1120px) wraps a single `<ExperienceSection />` (`aria-label`
   from `content.experience.title`) holding one merged
