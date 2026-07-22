@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { ContactList } from './ContactList';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { PdfExportButton } from './PdfExportButton';
 import { useLanguage } from '../../hooks/useLanguage';
 
 function TopBarComponent() {
@@ -10,7 +11,10 @@ function TopBarComponent() {
     <div className="page-topbar">
       <div className="section-inner topbar-inner">
         <ContactList contacts={content.hero.contacts} className="contact-list" />
-        <LanguageSwitcher />
+        <div className="topbar-actions">
+          <PdfExportButton />
+          <LanguageSwitcher />
+        </div>
       </div>
     </div>
   );

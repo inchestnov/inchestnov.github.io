@@ -224,6 +224,24 @@ export const iconMarkup = {
     '<polyline points="2 6 12 13 22 6"></polyline>' +
     '</svg>',
 
+  // Generic "website" glyph (not a brand mark) — a globe with meridian/
+  // parallel lines, used for the personal-site link (inchestnov.github.io).
+  website:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<circle cx="12" cy="12" r="10"></circle>' +
+    '<line x1="2" y1="12" x2="22" y2="12"></line>' +
+    '<path d="M12 2c2.5 2.5 4 6.5 4 10s-1.5 7.5-4 10c-2.5-2.5-4-6.5-4-10s1.5-7.5 4-10z"></path>' +
+    '</svg>',
+
+  // Generic "PDF file" glyph (not a brand mark) — a page with a folded
+  // corner and a "PDF" label, used by the PDF preview button.
+  'pdf-file':
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>' +
+    '<path d="M14 2v6h6"></path>' +
+    '<text x="12" y="16.5" text-anchor="middle" font-size="6.5" font-weight="700" fill="currentColor" stroke="none" font-family="Arial, sans-serif">PDF</text>' +
+    '</svg>',
+
   // Generic placeholder (not a brand mark) used on experience timeline
   // entries until real per-company logos are added.
   'company-placeholder':

@@ -69,7 +69,7 @@ export interface ResumeContent {
     rows: SkillItem[][];
   };
   about: {
-    text: string;
+    paragraphs: string[];
   };
   experience: {
     title: string;
@@ -82,5 +82,12 @@ export interface ResumeContent {
   };
   footer: {
     copyrightText: string;
+  };
+  pdfExport: {
+    buttonLabel: string;
+    downloadLabel: string;
+    fileName: string;
+    /** PDF's own /Title metadata — distinct from fileName; a viewer's own "Save As" dialog suggests a name from this metadata field, not from any wrapper HTML around it. */
+    documentTitle: string;
   };
 }

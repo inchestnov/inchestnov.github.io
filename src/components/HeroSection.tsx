@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '../hooks/useLanguage';
-import avatarPlaceholder from '../assets/avatar-placeholder.svg';
+import photo from '../assets/photo.jpeg';
 
 function HeroSectionComponent() {
   const { content } = useLanguage();
@@ -18,7 +18,7 @@ function HeroSectionComponent() {
         <div className="hero-avatar-wrapper">
           <img
             className="hero-avatar"
-            src={avatarPlaceholder}
+            src={photo}
             alt={content.hero.avatarAlt}
             width={128}
             height={128}
@@ -30,7 +30,11 @@ function HeroSectionComponent() {
             <span className="hero-heading-separator" aria-hidden="true">·</span>
             <p className="hero-role">{content.hero.role}</p>
           </div>
-          <p className="about-text">{content.about.text}</p>
+          {content.about.paragraphs.map((paragraph, index) => (
+            <p className="about-text" key={index}>
+              {paragraph}
+            </p>
+          ))}
         </div>
       </motion.div>
     </section>

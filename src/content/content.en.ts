@@ -49,7 +49,10 @@ export const contentEn: ResumeContent = {
     ]
   },
   about: {
-    text: 'Software engineer with experience building complex software systems. Focused on solving non-trivial engineering problems, designing architecture, and delivering high-quality software. Not tied to any single programming language or domain — technology choices are driven by the requirements of the task at hand. I have experience designing and building high-load distributed systems, with particular attention to fault tolerance, scalability, observability, and maintainability. I aim to build services that are easy to evolve, operate, and monitor in production.'
+    paragraphs: [
+      'Software engineer with experience building complex software systems. Focused on solving non-trivial engineering problems, designing architecture, and delivering high-quality software. I have experience designing and building high-load distributed systems, with particular attention to fault tolerance, scalability, observability, and maintainability.',
+      'Not tied to any single programming language or domain — technology choices are driven by the requirements of the task at hand. I aim to build services that are easy to evolve, operate, and monitor in production.'
+    ]
   },
   experience: {
     title: 'Work Experience',
@@ -183,6 +186,12 @@ export const contentEn: ResumeContent = {
     ]
   },
   footer: {
-    copyrightText: '© {year} Igor Chestnov. All rights reserved.'
+    copyrightText: '© {year} Igor Chestnov'
+  },
+  pdfExport: {
+    buttonLabel: 'Open PDF',
+    downloadLabel: 'Download',
+    fileName: 'Igor_Chestnov_Resume.pdf',
+    documentTitle: 'Igor Chestnov — Resume'
   }
 };
