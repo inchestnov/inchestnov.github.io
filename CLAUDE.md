@@ -610,3 +610,13 @@ entry, etc.), not the servable static site, so a GitHub Actions workflow
   git/CLI without a `gh`/API call — if the live site isn't updating after a
   push, check that setting first (and that the `gh-pages` branch exists,
   which it will after the workflow's first successful run).
+
+## 13. Commit conventions
+
+- Never add a `Co-Authored-By: Claude ...` trailer or a `Claude-Session:`
+  link to commit messages on this repo. Put the actual rationale — what
+  changed and why — directly in the commit message body instead; a
+  co-author trailer is not a substitute for that. This has already had to
+  be cleaned up from history twice (the `backup-before-history-rewrite*`
+  local branches are safety-net copies from those rewrites, kept around but
+  not pushed) — don't reintroduce it a third time.
