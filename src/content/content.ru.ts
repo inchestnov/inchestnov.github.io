@@ -154,6 +154,7 @@ export const contentRu: ResumeContent = {
         items: [
           { id: 'docker', name: 'Docker' },
           { id: 'kubernetes', name: 'Kubernetes' },
+          { id: 'helm', name: 'Helm' },
           { id: 'gitlab', name: 'GitLab' },
           { id: 'github', name: 'GitHub' },
           { id: 'linux', name: 'Linux' }
@@ -164,7 +165,25 @@ export const contentRu: ResumeContent = {
         items: [
           { id: 'postgresql', name: 'PostgreSQL' },
           { id: 'kafka', name: 'Kafka' },
-          { id: 'activemq', name: 'Apache ActiveMQ' }
+          { id: 'activemq', name: 'Apache ActiveMQ' },
+          { id: 'clickhouse', name: 'ClickHouse' }
+        ]
+      },
+      {
+        name: 'Протоколы',
+        items: [
+          { id: 'http', name: 'HTTP' },
+          { id: 'grpc', name: 'gRPC' },
+          { id: 'oauth2', name: 'OAuth 2.0' },
+          { id: 'jwt', name: 'JWT' }
+        ]
+      },
+      {
+        name: 'Мониторинг',
+        items: [
+          { id: 'prometheus', name: 'Prometheus' },
+          { id: 'grafana', name: 'Grafana' },
+          { id: 'elasticsearch', name: 'ELK Stack' }
         ]
       }
     ]
