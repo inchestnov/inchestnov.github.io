@@ -137,16 +137,9 @@ export const contentEn: ResumeContent = {
         items: [
           { id: 'go', name: 'Go' },
           { id: 'java', name: 'Java' },
-          { id: 'python', name: 'Python' }
-        ]
-      },
-      {
-        name: 'Tools',
-        items: [
+          { id: 'python', name: 'Python' },
           { id: 'spring', name: 'Spring' },
-          { id: 'spring-boot', name: 'Spring Boot' },
-          { id: 'git', name: 'Git' },
-          { id: 'claude-code', name: 'Claude Code' }
+          { id: 'spring-boot', name: 'Spring Boot' }
         ]
       },
       {
@@ -184,7 +177,7 @@ export const contentEn: ResumeContent = {
         items: [
           { id: 'prometheus', name: 'Prometheus' },
           { id: 'grafana', name: 'Grafana' },
-          { id: 'elasticsearch', name: 'ELK Stack' }
+          { id: 'elasticsearch', name: 'ELK' }
         ]
       }
     ]
