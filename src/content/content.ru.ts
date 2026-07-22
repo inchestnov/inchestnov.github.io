@@ -16,8 +16,8 @@ export const contentRu: ResumeContent = {
       },
       linkedin: {
         label: 'LinkedIn',
-        value: 'igor-chestnov',
-        href: 'https://linkedin.com/in/igor-chestnov'
+        value: 'inchestnov',
+        href: 'https://www.linkedin.com/in/inchestnov/'
       },
       github: {
         label: 'GitHub',
