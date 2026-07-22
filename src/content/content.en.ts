@@ -172,6 +172,7 @@ export const contentEn: ResumeContent = {
       {
         name: 'Protocols',
         items: [
+          { id: 'tcp-ip', name: 'TCP/IP' },
           { id: 'http', name: 'HTTP' },
           { id: 'grpc', name: 'gRPC' },
           { id: 'oauth2', name: 'OAuth 2.0' },

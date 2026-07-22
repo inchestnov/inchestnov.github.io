@@ -197,27 +197,25 @@ export const iconMarkup = {
     '<circle cx="12" cy="15.5" r="1.5" fill="currentColor" stroke="none"></circle>' +
     '</svg>',
 
-  // Source: the official IETF "HTTP" badge/logo, from Wikimedia Commons
-  // (upload.wikimedia.org/wikipedia/commons/5/5b/HTTP_logo.svg) — not
-  // Simple Icons, which has no HTTP entry (nor any generic-protocol icon).
-  // assets/icons/http.svg is the untouched reference copy (original two-tone
-  // blue hexagon badge, #008ec7/#005b9b, with a white "HTTP" wordmark cut
-  // into it). Here the two blue tones are both recolored to currentColor
-  // (collapsing to a single flat accent-blue hexagon, like every other icon
-  // in this file), while the four "HTTP" letter paths stay literal `#fff`
-  // so they read as a cutout wordmark against the colored badge — same
-  // knockout-on-a-badge treatment as `moex`/`ozon-bank` elsewhere in this
-  // file, just with a literal white fill instead of a `var(--color-surface)`
-  // background-matched one, since this badge is a solid accent-colored
-  // shape rather than something that needs to blend into the dark card.
+  // Generic protocol glyph (not a brand mark, hand-authored) — no official
+  // logo exists for the TCP/IP suite itself: an outlined frame with the
+  // wordmark inside, both in currentColor, matching the `http` entry below.
+  'tcp-ip':
+    '<svg viewBox="0 0 120 48" aria-hidden="true" focusable="false" role="img">' +
+    '<rect x="3" y="3" width="114" height="42" rx="10" fill="none" stroke="currentColor" stroke-width="5"></rect>' +
+    '<text x="60" y="26" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="22" fill="currentColor">TCP/IP</text>' +
+    '</svg>',
+
+  // Generic protocol glyph (not a brand mark, hand-authored) — no widely
+  // recognized logo exists for the HTTP protocol itself (the official IETF
+  // "HTTP" badge was tried first, then a plain rounded-rect frame matching
+  // `tcp-ip`, before landing on this hexagon outline — a rectangle with
+  // pointed left/right corners like a rhombus, flat top/bottom edges —
+  // to visually distinguish it from `tcp-ip`'s rounded-rect frame).
   http:
-    '<svg viewBox="0 0 373.71 200" fill="currentColor" aria-hidden="true" focusable="false" role="img">' +
-    '<path d="M326,0H47.73L0,100,47.73,200H326l47.73-100ZM310.05,183.36H58.22L18.43,100,58.22,16.64H310.05L349.84,100Z"></path>' +
-    '<polygon points="349.84 100.01 310.05 183.37 58.22 183.37 18.43 100.01 58.22 16.64 310.05 16.64 349.84 100.01"></polygon>' +
-    '<path fill="#fff" d="M128.05,71.89v59.53H114.27V107h-27v24.41H73.46V71.89H87.23V95.36h27V71.89Z"></path>' +
-    '<path fill="#fff" d="M154.5,83.12H135.45V71.89h51.87V83.12h-19v48.3H154.5Z"></path>' +
-    '<path fill="#fff" d="M207.9,83.12H188.85V71.89h51.87V83.12H221.67v48.3H207.9Z"></path>' +
-    '<path fill="#fff" d="M287.62,74.53a20.45,20.45,0,0,1,9,7.48,20.67,20.67,0,0,1,3.14,11.48,20.73,20.73,0,0,1-3.14,11.44,20.06,20.06,0,0,1-9,7.48A33.55,33.55,0,0,1,273.88,115h-12v16.42H248.12V71.89h25.76A33.05,33.05,0,0,1,287.62,74.53Zm-5.06,26.57a9.33,9.33,0,0,0,3.23-7.61c0-3.34-1.08-5.91-3.23-7.69s-5.3-2.68-9.44-2.68H261.89v20.66h11.23Q279.33,103.78,282.56,101.1Z"></path>' +
+    '<svg viewBox="0 0 100 48" aria-hidden="true" focusable="false" role="img">' +
+    '<polygon points="12,3 88,3 97,24 88,45 12,45 3,24" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"></polygon>' +
+    '<text x="50" y="26" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="22" fill="currentColor">HTTP</text>' +
     '</svg>',
 
   email:
