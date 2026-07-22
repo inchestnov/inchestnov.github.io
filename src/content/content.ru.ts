@@ -58,6 +58,8 @@ export const contentRu: ResumeContent = {
         company: 'Озон Банк',
         role: 'Software Engineer (Go Developer)',
         period: 'Декабрь 2023 — настоящее время',
+        startDate: '2023-12',
+        endDate: null,
         points: [
           'Разрабатываю сервисы для обработки, хранения и доступа к карточным данным.',
           'Проектирую надёжные системы для безопасного хранения криптографических данных.',
@@ -65,17 +67,31 @@ export const contentRu: ResumeContent = {
           'Отвечаю за правильность выполнения правил платёжных систем.',
           'Отвечаю за функциональность выпуска банковских карт.'
         ],
+        technologies: [
+          { id: 'go', name: 'Go' },
+          { id: 'postgresql', name: 'PostgreSQL' },
+          { id: 'kafka', name: 'Kafka' },
+          { id: 'kubernetes', name: 'Kubernetes' }
+        ],
         icon: 'ozon-bank'
       },
       {
         company: 'Московская Биржа (MOEX)',
         role: 'Java Developer',
         period: 'Октябрь 2021 — Декабрь 2023',
+        startDate: '2021-10',
+        endDate: '2023-12',
         points: [
           'Выполнял декомпозицию монолитного приложения на независимые микросервисы.',
           'Отвечал за хранение клиентских данных и доступ к ним.',
           'Участвовал в рефакторинге существующей архитектуры и повышении сопровождаемости системы.',
           'Разрабатывал интеграционные решения для взаимодействия компонентов распределённой системы.'
+        ],
+        technologies: [
+          { id: 'java', name: 'Java' },
+          { id: 'spring', name: 'Spring' },
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'postgresql', name: 'PostgreSQL' }
         ],
         icon: 'moex'
       },
@@ -83,12 +99,20 @@ export const contentRu: ResumeContent = {
         company: 'Haulmont',
         role: 'Java Developer',
         period: 'Январь 2020 — Октябрь 2021',
+        startDate: '2020-01',
+        endDate: '2021-10',
         points: [
           'Разрабатывал функциональность платформы ТЕЗИС по требованиям заказчиков.',
           'Участвовал в развитии и сопровождении коробочной версии продукта в составе команды ядра.',
           'Проектировал и реализовывал серверную бизнес-логику на Java и Spring Framework.',
           'Дорабатывал существующие модули системы электронного документооборота и автоматизации бизнес-процессов.',
           'Участвовал в командной разработке и сопровождении корпоративной платформы.'
+        ],
+        technologies: [
+          { id: 'java', name: 'Java' },
+          { id: 'spring', name: 'Spring' },
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'postgresql', name: 'PostgreSQL' }
         ],
         icon: 'haulmont'
       }

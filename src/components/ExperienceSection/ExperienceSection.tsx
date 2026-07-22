@@ -1,9 +1,10 @@
 import { memo } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
+import { formatJobDuration } from '../../utils/jobDuration';
 import { TimelineItem } from './TimelineItem';
 
 function ExperienceSectionComponent() {
-  const { content } = useLanguage();
+  const { content, language } = useLanguage();
   const { jobs, title } = content.experience;
   const { education } = content;
 
@@ -14,9 +15,11 @@ function ExperienceSectionComponent() {
           <TimelineItem
             key={job.company}
             period={job.period}
+            duration={formatJobDuration(job.startDate, job.endDate, language)}
             company={job.company}
             role={job.role}
             points={job.points}
+            technologies={job.technologies}
             icon={job.icon}
           />
         ))}

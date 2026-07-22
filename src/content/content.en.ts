@@ -58,6 +58,8 @@ export const contentEn: ResumeContent = {
         company: 'Ozon Bank',
         role: 'Software Engineer (Go Developer)',
         period: 'December 2023 — Present',
+        startDate: '2023-12',
+        endDate: null,
         points: [
           'Develop services for processing, storing, and accessing card data.',
           'Design reliable systems for the secure storage of cryptographic data.',
@@ -65,17 +67,31 @@ export const contentEn: ResumeContent = {
           'Ensure the correct application of payment system rules.',
           'Responsible for bank card issuance functionality.'
         ],
+        technologies: [
+          { id: 'go', name: 'Go' },
+          { id: 'postgresql', name: 'PostgreSQL' },
+          { id: 'kafka', name: 'Kafka' },
+          { id: 'kubernetes', name: 'Kubernetes' }
+        ],
         icon: 'ozon-bank'
       },
       {
         company: 'Moscow Exchange (MOEX)',
         role: 'Java Developer',
         period: 'October 2021 — December 2023',
+        startDate: '2021-10',
+        endDate: '2023-12',
         points: [
           'Decomposed a monolithic application into independent microservices.',
           'Was responsible for storing client data and controlling access to it.',
           'Participated in refactoring the existing architecture to improve maintainability.',
           'Built integration solutions for communication between components of the distributed system.'
+        ],
+        technologies: [
+          { id: 'java', name: 'Java' },
+          { id: 'spring', name: 'Spring' },
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'postgresql', name: 'PostgreSQL' }
         ],
         icon: 'moex'
       },
@@ -83,12 +99,20 @@ export const contentEn: ResumeContent = {
         company: 'Haulmont',
         role: 'Java Developer',
         period: 'January 2020 — October 2021',
+        startDate: '2020-01',
+        endDate: '2021-10',
         points: [
           'Developed functionality for the TESSA platform based on customer requirements.',
           "Participated in the development and maintenance of the product's off-the-shelf version as part of the core team.",
           'Designed and implemented server-side business logic in Java and Spring Framework.',
           'Enhanced existing modules of the document management and business process automation system.',
           'Participated in team development and maintenance of the corporate platform.'
+        ],
+        technologies: [
+          { id: 'java', name: 'Java' },
+          { id: 'spring', name: 'Spring' },
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'postgresql', name: 'PostgreSQL' }
         ],
         icon: 'haulmont'
       }

@@ -32,7 +32,12 @@ export interface ExperienceJob {
   company: string;
   role: string;
   period: string;
+  /** ISO 'YYYY-MM' start month, used to compute the displayed tenure duration. */
+  startDate: string;
+  /** ISO 'YYYY-MM' end month, or null for an ongoing job (duration computed against the current date). */
+  endDate: string | null;
   points: string[];
+  technologies: SkillItem[];
   icon: string;
 }
 
