@@ -10,19 +10,30 @@ interface TimelineItemProps {
   points: string[];
   technologies?: SkillItem[];
   icon: string;
+  dividerLabel?: string;
 }
 
-export function TimelineItem({ period, duration, company, role, points, technologies, icon }: TimelineItemProps) {
+export function TimelineItem({
+  period,
+  duration,
+  company,
+  role,
+  points,
+  technologies,
+  icon,
+  dividerLabel
+}: TimelineItemProps) {
   const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.li
-      className="timeline-item"
+      className={dividerLabel ? 'timeline-item timeline-item--divider' : 'timeline-item'}
       initial={shouldReduceMotion ? undefined : { opacity: 0, y: 24 }}
       whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
+      {dividerLabel ? <div className="timeline-divider">{dividerLabel}</div> : null}
       <div className="timeline-marker" aria-hidden="true" />
       <motion.div className="timeline-content" whileHover={shouldReduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }}>
         <p className="timeline-period">

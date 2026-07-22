@@ -362,6 +362,33 @@ button {
   margin-top: 0;
 }
 
+.timeline-item--divider {
+  margin-top: 76px;
+}
+
+.timeline-divider {
+  position: absolute;
+  top: -38px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.timeline-divider::before,
+.timeline-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border);
+}
+
 .timeline-marker {
   position: absolute;
   top: 6px;

@@ -126,7 +126,8 @@ export const contentEn: ResumeContent = {
       'Conducted research in group theory, focusing on triangle groups and their supercharacters.',
       'Wrote and defended a thesis on the characters of the 4th-order triangle group.'
     ],
-    icon: 'samara-university'
+    icon: 'samara-university',
+    dividerLabel: 'Education'
   },
   roadmap: {
     title: 'Technology Stack',

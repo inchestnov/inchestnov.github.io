@@ -47,6 +47,8 @@ export interface EducationEntry {
   degree: string;
   description: string[];
   icon: string;
+  /** Label shown on the divider line separating education from work experience in the merged timeline. */
+  dividerLabel: string;
 }
 
 export interface ResumeContent {

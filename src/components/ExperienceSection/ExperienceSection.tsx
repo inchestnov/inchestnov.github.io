@@ -29,6 +29,7 @@ function ExperienceSectionComponent() {
           role={education.degree}
           points={education.description}
           icon={education.icon}
+          dividerLabel={education.dividerLabel}
         />
       </ol>
     </section>
