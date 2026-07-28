@@ -158,8 +158,16 @@ export const contentRu: ResumeContent = {
           { id: 'go', name: 'Go' },
           { id: 'java', name: 'Java' },
           { id: 'python', name: 'Python' },
+          { id: 'sql', name: 'SQL' }
+        ]
+      },
+      {
+        name: 'Фреймворки',
+        items: [
           { id: 'spring', name: 'Spring' },
-          { id: 'spring-boot', name: 'Spring Boot' }
+          { id: 'spring-boot', name: 'Spring Boot' },
+          { id: 'junit5', name: 'JUnit 5' },
+          { id: 'testcontainers', name: 'Testcontainers' }
         ]
       },
       {
@@ -197,7 +205,9 @@ export const contentRu: ResumeContent = {
         items: [
           { id: 'prometheus', name: 'Prometheus' },
           { id: 'grafana', name: 'Grafana' },
-          { id: 'elasticsearch', name: 'ELK' }
+          { id: 'alertmanager', name: 'Alertmanager' },
+          { id: 'elasticsearch', name: 'ELK' },
+          { id: 'opentelemetry', name: 'OpenTelemetry' }
         ]
       }
     ]

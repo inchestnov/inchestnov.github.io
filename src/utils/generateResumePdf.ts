@@ -341,7 +341,17 @@ function writeTechTable(doc: jsPDF, cursor: Cursor, content: ResumeContent): voi
   const columnWidth = CONTENT_WIDTH / columnCount;
   const cellPadding = 3;
   const rowHeight = 4.0;
-  const headerHeight = 6.2;
+  const headerLineHeight = 3.6;
+  const headerFontSize = 8.5;
+
+  doc.setFont(FONT_NAME, 'bold');
+  doc.setFontSize(headerFontSize);
+  // Category names wrap onto multiple lines just like body items do — a
+  // narrower column count no longer guarantees a name like "Frameworks &
+  // Testing" fits on one line at this column width.
+  const headerLines = groups.map((group) => doc.splitTextToSize(group.name, columnWidth - cellPadding * 2) as string[]);
+  const headerRowCount = Math.max(...headerLines.map((lines) => lines.length));
+  const headerHeight = 2.6 + headerRowCount * headerLineHeight;
 
   const columnLines = groups.map((group) =>
     group.items.map((item) => doc.splitTextToSize(item.name, columnWidth - cellPadding * 2) as string[]).flat()
@@ -353,11 +363,13 @@ function writeTechTable(doc: jsPDF, cursor: Cursor, content: ResumeContent): voi
   const top = cursor.y;
 
   doc.setFont(FONT_NAME, 'bold');
-  doc.setFontSize(9.5);
+  doc.setFontSize(headerFontSize);
   doc.setTextColor(...COLOR_ACCENT);
-  groups.forEach((group, index) => {
+  headerLines.forEach((lines, index) => {
     const x = MARGIN + index * columnWidth;
-    doc.text(group.name, x + cellPadding, top + 5.5);
+    lines.forEach((line, rowIndex) => {
+      doc.text(line, x + cellPadding, top + 2.6 + (rowIndex + 1) * headerLineHeight);
+    });
   });
 
   doc.setFont(FONT_NAME, 'normal');
