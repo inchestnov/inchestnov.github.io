@@ -76,12 +76,14 @@ export const contentEn: ResumeContent = {
         period: 'December 2023 — Present',
         startDate: '2023-12',
         endDate: null,
+        summary:
+          "Build and evolve the bank's core processing services. Responsible for the correctness of card transaction processing and compliance with payment system rules. Design reliable systems for storing card and cryptographic data, with a strong focus on security.",
         points: [
-          'Develop services for processing, storing, and accessing card data.',
-          'Design reliable systems for the secure storage of cryptographic data.',
-          "Evolve the bank's core processing services responsible for security and card operation handling.",
-          'Ensure the correct application of payment system rules.',
-          'Responsible for bank card issuance functionality.'
+          'Designed and implemented card transaction processing handling a load of 200 RPS.',
+          'Set up a fault-tolerant verification mechanism for cryptographic data (PIN, CVV, chip card data).',
+          'Built and rolled out a 3DS server (issuer authentication for online purchases).',
+          'Set up and automated document exchange between the bank and the payment system.',
+          'Built and launched processing of clearing files from the payment system.'
         ],
         technologies: [
           { id: 'go', name: 'Go' },
@@ -97,11 +99,13 @@ export const contentEn: ResumeContent = {
         period: 'October 2021 — December 2023',
         startDate: '2021-10',
         endDate: '2023-12',
+        summary:
+          'Helped move the platform from a legacy monolith to a modern microservices architecture. Responsible for storing client data, documents, and securities data.',
         points: [
-          'Decomposed a monolithic application into independent microservices.',
-          'Was responsible for storing client data and controlling access to it.',
-          'Participated in refactoring the existing architecture to improve maintainability.',
-          'Built integration solutions for communication between components of the distributed system.'
+          'Rewrote two modules of the monolithic application as target microservices on Spring Boot, deployed to Kubernetes.',
+          'Designed and implemented the client and server side of OAuth 2.0 authorization between services. Wrote and rolled out platform libraries used by every developer in the department.',
+          'Set up a mechanism to synchronize user privileges between the legacy Oracle database and the target Keycloak.',
+          'Led a team of five: designed and rolled out the business process for listing new securities for exchange trading.'
         ],
         technologies: [
           { id: 'java', name: 'Java' },
@@ -117,12 +121,12 @@ export const contentEn: ResumeContent = {
         period: 'January 2020 — October 2021',
         startDate: '2020-01',
         endDate: '2021-10',
+        summary:
+          'Built out the TESSA document management platform as part of the core team — designing server-side business logic in Java and Spring, shipping features to customer requirements, and maintaining the off-the-shelf product. Worked on a complete redesign of the system.',
         points: [
-          'Developed functionality for the TESSA platform based on customer requirements.',
-          "Participated in the development and maintenance of the product's off-the-shelf version as part of the core team.",
-          'Designed and implemented server-side business logic in Java and Spring Framework.',
-          'Enhanced existing modules of the document management and business process automation system.',
-          'Participated in team development and maintenance of the corporate platform.'
+          'Implemented business processes for creating and approving documents for the governments of the Komi Republic and the Yamalo-Nenets Autonomous Okrug.',
+          'Designed and implemented a one-click deduplication mechanism for database records.',
+          'Delivered a complete redesign of the web layer using HTML, CSS, and Vaadin.'
         ],
         technologies: [
           { id: 'java', name: 'Java' },

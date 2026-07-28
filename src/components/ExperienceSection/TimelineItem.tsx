@@ -7,6 +7,7 @@ interface TimelineItemProps {
   duration?: string;
   company: string;
   role: string;
+  summary?: string;
   points: string[];
   technologies?: SkillItem[];
   icon: string;
@@ -20,6 +21,7 @@ export function TimelineItem({
   duration,
   company,
   role,
+  summary,
   points,
   technologies,
   icon,
@@ -54,6 +56,7 @@ export function TimelineItem({
           {isCurrent && currentLabel ? <span className="visually-hidden">{currentLabel}</span> : null}
         </div>
         <p className="timeline-role">{role}</p>
+        {summary ? <p className="timeline-summary">{summary}</p> : null}
         <ul className="timeline-points">
           {points.map((point, index) => (
             <li key={index}>{point}</li>

@@ -714,6 +714,13 @@ button {
   font-weight: 500;
 }
 
+.timeline-summary {
+  margin-top: 12px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
 .timeline-points {
   margin-top: 14px;
   display: flex;

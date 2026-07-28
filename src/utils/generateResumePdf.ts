@@ -137,17 +137,17 @@ function ensureSpace(doc: jsPDF, cursor: Cursor, needed: number): void {
 function writeHeading(doc: jsPDF, cursor: Cursor, text: string): void {
   // Reserve room for the heading itself plus its first line of content, so
   // a heading never ends up as a "widow" alone at the bottom of a page.
-  ensureSpace(doc, cursor, 22);
-  cursor.y += 3;
+  ensureSpace(doc, cursor, 20);
+  cursor.y += 2;
   doc.setFont(FONT_NAME, 'bold');
-  doc.setFontSize(11.5);
+  doc.setFontSize(11);
   doc.setTextColor(...COLOR_ACCENT);
   doc.text(text.toUpperCase(), MARGIN, cursor.y);
-  cursor.y += 2.2;
+  cursor.y += 2;
   doc.setDrawColor(...COLOR_RULE);
   doc.setLineWidth(0.3);
   doc.line(MARGIN, cursor.y, PAGE_WIDTH - MARGIN, cursor.y);
-  cursor.y += 5;
+  cursor.y += 3.8;
 }
 
 function writeParagraph(
@@ -174,8 +174,8 @@ function writeParagraph(
 }
 
 function writeBullets(doc: jsPDF, cursor: Cursor, points: string[]): void {
-  const size = 9.5;
-  const lineHeight = 4.1;
+  const size = 9.2;
+  const lineHeight = 3.85;
   const indent = 4;
   doc.setFont(FONT_NAME, 'normal');
   doc.setFontSize(size);
@@ -194,10 +194,28 @@ function writeBullets(doc: jsPDF, cursor: Cursor, points: string[]): void {
   }
 }
 
+/**
+ * Measures every entry's period string at the font/size writeEntry renders
+ * it in, and returns the x position that right-aligns only the widest one
+ * against the page margin — every other (shorter) period is drawn starting
+ * at that same x instead of being individually right-aligned. This keeps
+ * the whole date column sharing one left edge (same trick as
+ * writeContactsColumn's right-aligned-as-a-block link list) instead of a
+ * ragged left edge where each period starts wherever its own width happens
+ * to land it.
+ */
+function computePeriodColumnX(doc: jsPDF, periods: string[]): number {
+  doc.setFont(FONT_NAME, 'normal');
+  doc.setFontSize(9);
+  const maxWidth = Math.max(...periods.map((period) => doc.getTextWidth(period)));
+  return PAGE_WIDTH - MARGIN - maxWidth;
+}
+
 function writeEntry(
   doc: jsPDF,
   cursor: Cursor,
-  entry: { heading: string; subheading: string; period: string; points: string[]; technologiesLine?: string }
+  entry: { heading: string; subheading: string; period: string; points: string[]; technologiesLine?: string },
+  periodX: number
 ): void {
   // Reserve room for the heading/period/role rows plus at least one bullet,
   // so the entry's heading never gets stranded alone at the page bottom.
@@ -210,23 +228,23 @@ function writeEntry(
   doc.setFont(FONT_NAME, 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...COLOR_MUTED);
-  doc.text(entry.period, PAGE_WIDTH - MARGIN, cursor.y, { align: 'right' });
-  cursor.y += 4.5;
+  doc.text(entry.period, periodX, cursor.y);
+  cursor.y += 4.2;
 
   doc.setFont(FONT_NAME, 'normal');
   doc.setFontSize(9.5);
   doc.setTextColor(...COLOR_ACCENT);
   doc.text(entry.subheading, MARGIN, cursor.y);
-  cursor.y += 5;
+  cursor.y += 4.4;
 
   writeBullets(doc, cursor, entry.points);
 
   if (entry.technologiesLine) {
-    cursor.y += 1;
-    writeParagraph(doc, cursor, entry.technologiesLine, { size: 8.5, color: COLOR_MUTED });
+    cursor.y += 0.8;
+    writeParagraph(doc, cursor, entry.technologiesLine, { size: 8.3, color: COLOR_MUTED, lineHeight: 3.6 });
   }
 
-  cursor.y += 3.5;
+  cursor.y += 2.4;
 }
 
 function jobToEntry(job: ExperienceJob, language: Language) {
@@ -322,8 +340,8 @@ function writeTechTable(doc: jsPDF, cursor: Cursor, content: ResumeContent): voi
   const columnCount = groups.length;
   const columnWidth = CONTENT_WIDTH / columnCount;
   const cellPadding = 3;
-  const rowHeight = 4.3;
-  const headerHeight = 7;
+  const rowHeight = 4.0;
+  const headerHeight = 6.2;
 
   const columnLines = groups.map((group) =>
     group.items.map((item) => doc.splitTextToSize(item.name, columnWidth - cellPadding * 2) as string[]).flat()
@@ -352,7 +370,7 @@ function writeTechTable(doc: jsPDF, cursor: Cursor, content: ResumeContent): voi
     });
   });
 
-  cursor.y = top + tableHeight + 5;
+  cursor.y = top + tableHeight + 3.5;
 }
 
 export async function generateResumePdf(content: ResumeContent, language: Language): Promise<jsPDF> {
@@ -398,24 +416,35 @@ export async function generateResumePdf(content: ResumeContent, language: Langua
   cursor.y = Math.max(cursor.y + AVATAR_SIZE + 2, contactsBottom) + 4;
 
   for (const paragraph of content.about.paragraphs) {
-    writeParagraph(doc, cursor, paragraph, { size: 9.5, color: COLOR_TEXT, lineHeight: 4.3 });
-    cursor.y += 2;
+    writeParagraph(doc, cursor, paragraph, { size: 9.2, color: COLOR_TEXT, lineHeight: 4.0 });
+    cursor.y += 1.2;
   }
-  cursor.y += 1;
+  cursor.y += 0.5;
+
+  const jobEntries = content.experience.jobs.map((job) => jobToEntry(job, language));
+  const education = content.education;
+  // Shared across both the experience and education entries so the date
+  // column reads as one continuous alignment down the whole page, not just
+  // within the experience section.
+  const periodColumnX = computePeriodColumnX(doc, [...jobEntries.map((entry) => entry.period), education.period]);
 
   writeHeading(doc, cursor, content.experience.title);
-  for (const job of content.experience.jobs) {
-    writeEntry(doc, cursor, jobToEntry(job, language));
+  for (const entry of jobEntries) {
+    writeEntry(doc, cursor, entry, periodColumnX);
   }
 
-  const education = content.education;
   writeHeading(doc, cursor, education.dividerLabel);
-  writeEntry(doc, cursor, {
-    heading: education.institution,
-    subheading: education.degree,
-    period: education.period,
-    points: education.description
-  });
+  writeEntry(
+    doc,
+    cursor,
+    {
+      heading: education.institution,
+      subheading: education.degree,
+      period: education.period,
+      points: education.description
+    },
+    periodColumnX
+  );
 
   writeHeading(doc, cursor, content.roadmap.title);
   writeTechTable(doc, cursor, content);

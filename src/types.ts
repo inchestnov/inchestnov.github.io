@@ -36,6 +36,8 @@ export interface ExperienceJob {
   startDate: string;
   /** ISO 'YYYY-MM' end month, or null for an ongoing job (duration computed against the current date). */
   endDate: string | null;
+  /** Short prose overview of the role, rendered above `points` — a readable summary, not a duplicate of the bullet list. */
+  summary: string;
   points: string[];
   technologies: SkillItem[];
   icon: string;

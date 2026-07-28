@@ -18,6 +18,7 @@ function ExperienceSectionComponent() {
             duration={formatJobDuration(job.startDate, job.endDate, language)}
             company={job.company}
             role={job.role}
+            summary={job.summary}
             points={job.points}
             technologies={job.technologies}
             icon={job.icon}
