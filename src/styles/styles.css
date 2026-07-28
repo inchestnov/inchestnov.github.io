@@ -955,12 +955,10 @@ button {
 
   .experience-timeline::before {
     left: 5px;
-    transform: none;
   }
 
   .timeline-marker {
     left: 5px;
-    transform: none;
   }
 
   .timeline-item:nth-child(odd) .timeline-content,
