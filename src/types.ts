@@ -41,6 +41,11 @@ export interface ExperienceJob {
   icon: string;
 }
 
+export interface SectionNavItem {
+  href: string;
+  label: string;
+}
+
 export interface EducationEntry {
   period: string;
   institution: string;
@@ -64,6 +69,14 @@ export interface ResumeContent {
   languageSwitcher: {
     ariaLabel: string;
   };
+  sectionNav: {
+    ariaLabel: string;
+    items: SectionNavItem[];
+  };
+  contactList: {
+    /** Shown as a transient toast after the email contact link is clicked (see ContactList's copy-to-clipboard handling). */
+    emailCopiedLabel: string;
+  };
   skills: {
     title: string;
     rows: SkillItem[][];
@@ -74,6 +87,8 @@ export interface ResumeContent {
   experience: {
     title: string;
     jobs: ExperienceJob[];
+    /** Screen-reader-only label marking the job whose endDate is null as the current one (see TimelineItem). */
+    currentLabel: string;
   };
   education: EducationEntry;
   roadmap: {

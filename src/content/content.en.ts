@@ -17,7 +17,7 @@ export const contentEn: ResumeContent = {
       linkedin: {
         label: 'LinkedIn',
         value: 'inchestnov',
-        href: 'https://www.linkedin.com/in/inchestnov/'
+        href: 'https://www.linkedin.com/in/inchestnov'
       },
       github: {
         label: 'GitHub',
@@ -33,6 +33,18 @@ export const contentEn: ResumeContent = {
   },
   languageSwitcher: {
     ariaLabel: 'Language switcher'
+  },
+  sectionNav: {
+    ariaLabel: 'Quick section navigation',
+    items: [
+      { href: '#hero-section', label: 'About' },
+      { href: '#skills-section', label: 'Skills' },
+      { href: '#experience-section', label: 'Experience' },
+      { href: '#roadmap-section', label: 'Stack' }
+    ]
+  },
+  contactList: {
+    emailCopiedLabel: 'Copied'
   },
   skills: {
     title: 'Key Skills',
@@ -56,6 +68,7 @@ export const contentEn: ResumeContent = {
   },
   experience: {
     title: 'Work Experience',
+    currentLabel: 'Current position',
     jobs: [
       {
         company: 'Ozon Bank',
@@ -189,7 +202,7 @@ export const contentEn: ResumeContent = {
     copyrightText: '© {year} Igor Chestnov'
   },
   pdfExport: {
-    buttonLabel: 'Open PDF',
+    buttonLabel: 'PDF',
     downloadLabel: 'Download',
     fileName: 'Igor_Chestnov_Resume.pdf',
     documentTitle: 'Igor Chestnov — Resume'

@@ -17,7 +17,7 @@ export const contentRu: ResumeContent = {
       linkedin: {
         label: 'LinkedIn',
         value: 'inchestnov',
-        href: 'https://www.linkedin.com/in/inchestnov/'
+        href: 'https://www.linkedin.com/in/inchestnov'
       },
       github: {
         label: 'GitHub',
@@ -33,6 +33,18 @@ export const contentRu: ResumeContent = {
   },
   languageSwitcher: {
     ariaLabel: 'Переключатель языка'
+  },
+  sectionNav: {
+    ariaLabel: 'Быстрая навигация по разделам',
+    items: [
+      { href: '#hero-section', label: 'Обо мне' },
+      { href: '#skills-section', label: 'Навыки' },
+      { href: '#experience-section', label: 'Опыт' },
+      { href: '#roadmap-section', label: 'Стек' }
+    ]
+  },
+  contactList: {
+    emailCopiedLabel: 'Скопировано'
   },
   skills: {
     title: 'Ключевые навыки',
@@ -56,6 +68,7 @@ export const contentRu: ResumeContent = {
   },
   experience: {
     title: 'Опыт работы',
+    currentLabel: 'Текущее место работы',
     jobs: [
       {
         company: 'Озон Банк',
@@ -189,7 +202,7 @@ export const contentRu: ResumeContent = {
     copyrightText: '© {year} Игорь Честнов'
   },
   pdfExport: {
-    buttonLabel: 'Открыть PDF',
+    buttonLabel: 'PDF',
     downloadLabel: 'Скачать',
     fileName: 'Игорь_Честнов_Резюме.pdf',
     documentTitle: 'Игорь Честнов — Резюме'

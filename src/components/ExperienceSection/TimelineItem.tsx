@@ -11,6 +11,8 @@ interface TimelineItemProps {
   technologies?: SkillItem[];
   icon: string;
   dividerLabel?: string;
+  isCurrent?: boolean;
+  currentLabel?: string;
 }
 
 export function TimelineItem({
@@ -21,9 +23,15 @@ export function TimelineItem({
   points,
   technologies,
   icon,
-  dividerLabel
+  dividerLabel,
+  isCurrent,
+  currentLabel
 }: TimelineItemProps) {
   const shouldReduceMotion = useReducedMotion();
+
+  const markerClassName = isCurrent
+    ? `timeline-marker ${shouldReduceMotion ? 'timeline-marker--current-static' : 'timeline-marker--current'}`
+    : 'timeline-marker';
 
   return (
     <motion.li
@@ -34,7 +42,7 @@ export function TimelineItem({
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {dividerLabel ? <div className="timeline-divider">{dividerLabel}</div> : null}
-      <div className="timeline-marker" aria-hidden="true" />
+      <div className={markerClassName} aria-hidden="true" />
       <motion.div className="timeline-content" whileHover={shouldReduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }}>
         <p className="timeline-period">
           {period}
@@ -43,6 +51,7 @@ export function TimelineItem({
         <div className="timeline-heading">
           <Icon id={icon} className="timeline-icon" />
           <h3 className="timeline-company">{company}</h3>
+          {isCurrent && currentLabel ? <span className="visually-hidden">{currentLabel}</span> : null}
         </div>
         <p className="timeline-role">{role}</p>
         <ul className="timeline-points">

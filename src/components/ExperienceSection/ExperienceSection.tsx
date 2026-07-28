@@ -5,7 +5,7 @@ import { TimelineItem } from './TimelineItem';
 
 function ExperienceSectionComponent() {
   const { content, language } = useLanguage();
-  const { jobs, title } = content.experience;
+  const { jobs, title, currentLabel } = content.experience;
   const { education } = content;
 
   return (
@@ -21,6 +21,8 @@ function ExperienceSectionComponent() {
             points={job.points}
             technologies={job.technologies}
             icon={job.icon}
+            isCurrent={job.endDate === null}
+            currentLabel={currentLabel}
           />
         ))}
         <TimelineItem
