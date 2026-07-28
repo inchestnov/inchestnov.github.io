@@ -664,6 +664,32 @@ button {
   box-shadow: var(--shadow-card);
 }
 
+.timeline-year-decor {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(120px, 14vw, 220px);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text-muted);
+  opacity: 0.16;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.timeline-item:nth-child(odd) .timeline-year-decor {
+  left: calc(50% + 24px);
+  right: 24px;
+  text-align: left;
+}
+
+.timeline-item:nth-child(even) .timeline-year-decor {
+  right: calc(50% + 24px);
+  left: 24px;
+  text-align: right;
+}
+
 .timeline-period {
   font-size: 13px;
   font-weight: 600;
@@ -941,6 +967,10 @@ button {
   .timeline-item:nth-child(even) .timeline-content {
     margin-left: 32px;
     margin-right: 0;
+  }
+
+  .timeline-year-decor {
+    display: none;
   }
 }
 

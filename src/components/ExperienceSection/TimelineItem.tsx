@@ -30,6 +30,7 @@ export function TimelineItem({
   currentLabel
 }: TimelineItemProps) {
   const shouldReduceMotion = useReducedMotion();
+  const startYear = period.match(/\d{4}/)?.[0];
 
   const markerClassName = isCurrent
     ? `timeline-marker ${shouldReduceMotion ? 'timeline-marker--current-static' : 'timeline-marker--current'}`
@@ -44,6 +45,11 @@ export function TimelineItem({
       transition={{ duration: 0.4, ease: 'easeOut' }}
     >
       {dividerLabel ? <div className="timeline-divider">{dividerLabel}</div> : null}
+      {startYear ? (
+        <span className="timeline-year-decor" aria-hidden="true">
+          {startYear}
+        </span>
+      ) : null}
       <div className={markerClassName} aria-hidden="true" />
       <motion.div className="timeline-content" whileHover={shouldReduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }}>
         <p className="timeline-period">
