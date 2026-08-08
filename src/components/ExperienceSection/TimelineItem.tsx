@@ -39,10 +39,10 @@ export function TimelineItem({
   return (
     <motion.li
       className={dividerLabel ? 'timeline-item timeline-item--divider' : 'timeline-item'}
-      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 24 }}
-      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={shouldReduceMotion ? undefined : { opacity: 0, y: 28, filter: 'blur(6px)' }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0, filter: 'blur(0px)' }}
       viewport={{ once: true, margin: '-60px' }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
       {dividerLabel ? <div className="timeline-divider">{dividerLabel}</div> : null}
       {startYear ? (
@@ -51,7 +51,11 @@ export function TimelineItem({
         </span>
       ) : null}
       <div className={markerClassName} aria-hidden="true" />
-      <motion.div className="timeline-content" whileHover={shouldReduceMotion ? undefined : { y: -4 }} transition={{ duration: 0.2 }}>
+      <motion.div
+        className="timeline-content"
+        whileHover={shouldReduceMotion ? undefined : { y: -6 }}
+        transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+      >
         <p className="timeline-period">
           {period}
           {duration ? <span className="timeline-duration"> ({duration})</span> : null}

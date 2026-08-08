@@ -1,23 +1,49 @@
 /* ==========================================================================
    CSS Custom Properties (Theming)
-   Dark is the only palette the site supports.
+   "Elevated dark glass" — a single deep, near-black canvas with a cool
+   undertone, translucent glass surfaces (backdrop-blur + specular top
+   hairline), and one blue accent that carries a soft glow. Dark is the
+   only palette the site supports.
    ========================================================================== */
 
 :root {
-  --color-background: #0f1115;
-  --color-background-alt: #14171d;
-  --color-surface: #1a1e26;
-  --color-surface-elevated: #20242e;
-  --color-border: #2b3140;
-  --color-text-primary: #e8eaf0;
-  --color-text-secondary: #a3aab8;
-  --color-text-muted: #6b7280;
-  --color-text-faint: #4b5261;
+  /* Canvas — deep, cool near-black */
+  --color-background: #090b0f;
+  --color-background-alt: #0c0f14;
+
+  /* Glass surfaces — translucent fills that rely on backdrop-filter over the
+     ambient glow behind them. --*-solid variants are opaque fallbacks. */
+  --color-surface: rgba(255, 255, 255, 0.038);
+  --color-surface-solid: #14171d;
+  --color-surface-elevated: rgba(255, 255, 255, 0.065);
+  --glass-fill-top: rgba(255, 255, 255, 0.06);
+  --glass-fill-bottom: rgba(255, 255, 255, 0.022);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.14);
+
+  --color-text-primary: #f1f3f8;
+  --color-text-secondary: #b6bdca;
+  --color-text-muted: #808a9c;
+  --color-text-faint: #4e576a;
+
   --color-accent-primary: #5b9dff;
-  --color-accent-primary-hover: #7fb2ff;
-  --color-accent-contrast: #0f1115;
-  --color-timeline-line: #2b3140;
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --color-accent-primary-hover: #8ab6ff;
+  --color-accent-soft: rgba(91, 157, 255, 0.14);
+  --color-accent-glow: rgba(91, 157, 255, 0.42);
+  --color-accent-contrast: #060810;
+  --color-timeline-line: rgba(255, 255, 255, 0.09);
+
+  --shadow-card: 0 18px 50px -18px rgba(0, 0, 0, 0.75);
+  --shadow-glass: 0 12px 40px -14px rgba(0, 0, 0, 0.6);
+  --shadow-float: 0 26px 60px -20px rgba(0, 0, 0, 0.8);
+
+  --font-display: 'Bricolage Grotesque', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-card: 18px;
 }
 
 /* ==========================================================================
@@ -36,7 +62,9 @@ html {
      target's top edge flush with the viewport top — right underneath the
      sticky .page-topbar, hiding the section's own first content. This
      leaves clearance for the topbar's height plus a little breathing room. */
-  scroll-padding-top: 96px;
+  scroll-padding-top: 104px;
+  /* Themed Firefox scrollbar (Chromium uses ::-webkit-scrollbar below). */
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
 }
 
 body {
@@ -45,6 +73,15 @@ body {
   background-color: var(--color-background);
   color: var(--color-text-primary);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Ambient depth: two fixed, very soft accent washes anchored to the top of
+     the page, plus a faint vignette. The glass surfaces frost over these. */
+  background-image:
+    radial-gradient(80ch 60ch at 78% -8%, rgba(91, 157, 255, 0.16), transparent 62%),
+    radial-gradient(70ch 55ch at 8% 2%, rgba(91, 157, 255, 0.08), transparent 60%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
 h1, h2, h3, p, ul, ol {
@@ -66,6 +103,38 @@ button {
   cursor: pointer;
 }
 
+/* Themed browser surfaces — selection, focus ring, scrollbar — so the
+   details the page didn't draw still belong to the palette. */
+::selection {
+  background: var(--color-accent-glow);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  height: 13px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  border: 3px solid var(--color-background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -84,16 +153,45 @@ button {
   padding: 0 24px;
 }
 
+/* Reusable glass material. Elements opt in by also setting their own radius,
+   padding and any layout. */
+.glass {
+  background-image: linear-gradient(155deg, var(--glass-fill-top), var(--glass-fill-bottom));
+  border: 1px solid var(--color-border);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  backdrop-filter: blur(16px) saturate(1.25);
+  box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-highlight);
+}
+
 /* ==========================================================================
-   Top bar (contacts + language switcher)
+   Scroll progress line (top edge of the viewport, above the topbar)
+   ========================================================================== */
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-primary-hover));
+  box-shadow: 0 0 12px var(--color-accent-glow);
+  z-index: 200;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   Top bar (contacts + language switcher) — glass, sticky
    ========================================================================== */
 
 .page-topbar {
-  background-color: var(--color-background-alt);
-  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
+  background-color: rgba(9, 11, 15, 0.62);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .topbar-inner {
@@ -102,8 +200,8 @@ button {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: 13px;
+  padding-bottom: 13px;
 }
 
 .topbar-inner .contact-list {
@@ -112,13 +210,13 @@ button {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .topbar-inner .contact-link {
   padding: 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  border-radius: 10px;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
 .topbar-inner .contact-link:hover {
@@ -142,19 +240,26 @@ button {
   align-items: center;
   gap: 8px;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: transparent;
+  border-radius: 10px;
+  background: var(--color-surface);
   color: var(--color-text-secondary);
   font-size: 13px;
   font-weight: 600;
-  padding: 8px 12px;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  letter-spacing: 0.01em;
+  padding: 8px 13px;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
 }
 
 .pdf-export-button:hover {
   background-color: var(--color-surface-elevated);
   color: var(--color-text-primary);
-  border-color: var(--color-accent-primary);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+
+.pdf-export-button:active {
+  transform: translateY(0);
 }
 
 .pdf-export-icon {
@@ -177,12 +282,14 @@ button {
 }
 
 .section-nav-link {
-  padding: 6px 10px;
-  border-radius: 8px;
+  position: relative;
+  padding: 7px 12px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-text-secondary);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted);
+  transition: color 0.2s var(--ease-out), background-color 0.2s var(--ease-out);
 }
 
 .section-nav-link:hover {
@@ -194,11 +301,26 @@ button {
   color: var(--color-accent-primary);
 }
 
+.section-nav-link--active::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent-primary);
+  box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+/* PDF preview modal */
 .pdf-preview-backdrop {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background-color: rgba(15, 17, 21, 0.7);
+  background-color: rgba(6, 8, 12, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   padding: 48px 24px;
@@ -210,10 +332,10 @@ button {
   max-height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-solid);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-float);
   overflow: hidden;
 }
 
@@ -222,14 +344,15 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 16px;
-  background-color: var(--color-surface-elevated);
+  padding: 11px 16px;
+  background-color: rgba(255, 255, 255, 0.04);
   border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .pdf-preview-filename {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
   color: var(--color-text-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -247,17 +370,17 @@ button {
   display: inline-flex;
   align-items: center;
   border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: 5px 12px;
-  background: transparent;
-  color: var(--color-accent-primary);
+  border-radius: 8px;
+  padding: 6px 13px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-primary-hover);
   font-size: 13px;
   font-weight: 600;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .pdf-preview-download:hover {
-  background-color: var(--color-border);
+  background-color: rgba(91, 157, 255, 0.22);
   border-color: var(--color-accent-primary);
 }
 
@@ -265,20 +388,20 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background: transparent;
   color: var(--color-text-secondary);
   font-size: 15px;
   line-height: 1;
   flex-shrink: 0;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
 .pdf-preview-close:hover {
-  background-color: var(--color-border);
+  background-color: var(--color-surface-elevated);
   color: var(--color-text-primary);
 }
 
@@ -290,27 +413,29 @@ button {
   background-color: #fff;
 }
 
+/* Language switcher */
 .language-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: transparent;
-  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--color-surface);
+  padding: 8px 13px;
   font-size: 13px;
   font-weight: 600;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  letter-spacing: 0.02em;
+  transition: background-color 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
 }
 
 .language-switcher:hover {
   background-color: var(--color-surface-elevated);
-  border-color: var(--color-accent-primary);
+  border-color: var(--color-border-strong);
 }
 
 .language-switcher-option {
   color: var(--color-text-muted);
-  transition: color 0.2s ease;
+  transition: color 0.25s var(--ease-out);
 }
 
 .language-switcher-option--active {
@@ -318,40 +443,55 @@ button {
 }
 
 .language-switcher-divider {
-  color: var(--color-border);
+  color: var(--color-border-strong);
 }
 
 /* ==========================================================================
-   Hero (avatar left, name/role/about right) — full-width, above Skills
+   Hero (avatar + name/role/about) — full-width, above Skills
    ========================================================================== */
 
 .hero-section {
-  padding: 48px 0;
+  position: relative;
+  padding: 84px 0 56px;
 }
 
 .hero-inner {
+  position: relative;
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 40px;
+  gap: 44px;
 }
 
 .hero-avatar-wrapper {
-  width: 128px;
-  height: 128px;
+  position: relative;
+  width: 148px;
+  height: 148px;
   border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--color-accent-primary);
-  box-shadow: var(--shadow-card);
   flex-shrink: 0;
+  padding: 3px;
+  background: linear-gradient(150deg, var(--color-accent-primary), rgba(91, 157, 255, 0.15) 55%, transparent);
+  box-shadow: 0 0 0 1px var(--color-border), 0 20px 44px -16px rgba(91, 157, 255, 0.5);
+}
+
+.hero-avatar-wrapper::after {
+  /* soft halo bloom behind the avatar */
+  content: '';
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--color-accent-glow), transparent 72%);
+  opacity: 0.55;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .hero-avatar {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
   /* Zooms in 20% past a plain cover-fit, centered, so the subject isn't
      dwarfed by the wide landscape shot's background. */
@@ -366,36 +506,48 @@ button {
 
 .hero-heading {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .hero-name {
-  font-size: 30px;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.2vw, 58px);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
 }
 
+/* The visible separator dot from the old inline heading is retired in favor
+   of the stacked name/role layout; keep the rule harmless if it renders. */
 .hero-heading-separator {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-text-muted);
+  display: none;
 }
 
 .hero-role {
-  font-size: 30px;
-  font-weight: 500;
+  font-size: clamp(17px, 2.1vw, 21px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-accent-primary);
-  white-space: nowrap;
 }
 
 .about-text {
-  margin-top: 14px;
+  margin-top: 22px;
+  max-width: 68ch;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.68;
   text-align: justify;
+  /* Justify only reads cleanly with hyphenation on — otherwise the browser
+     stretches inter-word spacing and opens "rivers" of whitespace. Relies on
+     <html lang> (set per active language) for correct ru/en break points. */
+  -webkit-hyphens: auto;
+  hyphens: auto;
   color: var(--color-text-secondary);
+}
+
+.about-text + .about-text {
+  margin-top: 14px;
 }
 
 /* ==========================================================================
@@ -434,7 +586,7 @@ button {
   font-size: 14px;
   font-weight: 500;
   text-align: left;
-  transition: color 0.2s ease;
+  transition: color 0.2s var(--ease-out);
 }
 
 .contact-link:hover {
@@ -446,20 +598,20 @@ button {
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--color-surface-elevated);
+  background-color: var(--color-surface-solid);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
   font-size: 12px;
   font-weight: 600;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 7px;
   white-space: nowrap;
   box-shadow: var(--shadow-card);
   pointer-events: none;
 }
 
 .contact-copied-toast--animated {
-  animation: contact-toast-pop 1.6s ease forwards;
+  animation: contact-toast-pop 1.6s var(--ease-out) forwards;
 }
 
 @keyframes contact-toast-pop {
@@ -497,16 +649,19 @@ button {
    ========================================================================== */
 
 .skills-banner {
-  padding: 48px 0;
+  padding: 40px 0 48px;
 }
 
 .skills-banner-inner {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 24px;
 }
 
+/* Both `rows` groups flow into one continuous horizontal line on desktop
+   (flex row + wrap); at 64px icons the five skills fit the 1120px width as a
+   single row. Below 600px this flips to a column (see the mobile block). */
 .skills-grid {
   width: 100%;
   display: flex;
@@ -524,6 +679,8 @@ button {
   gap: 32px 40px;
 }
 
+/* Plate-free: no card background or border — just the mark and its name. The
+   accent color + glow keep the icons tied to the rest of the glass system. */
 .skill-card {
   display: flex;
   flex-direction: row;
@@ -539,6 +696,7 @@ button {
   height: 64px;
   color: var(--color-accent-primary);
   flex-shrink: 0;
+  filter: drop-shadow(0 4px 14px var(--color-accent-glow));
 }
 
 .skill-icon svg {
@@ -568,12 +726,18 @@ button {
   bottom: 6px;
   width: 2px;
   transform: translateX(-50%);
-  background-color: var(--color-timeline-line);
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-timeline-line) 8%,
+    var(--color-timeline-line) 92%,
+    transparent
+  );
 }
 
 .timeline-item {
   position: relative;
-  margin-top: 40px;
+  margin-top: 44px;
 }
 
 .timeline-item:first-child {
@@ -581,21 +745,22 @@ button {
 }
 
 .timeline-item--divider {
-  margin-top: 76px;
+  margin-top: 80px;
 }
 
 .timeline-divider {
   position: absolute;
-  top: -38px;
+  top: -40px;
   left: 0;
   right: 0;
   display: flex;
   align-items: center;
   gap: 16px;
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.16em;
   color: var(--color-text-muted);
 }
 
@@ -609,14 +774,14 @@ button {
 
 .timeline-marker {
   position: absolute;
-  top: 6px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 4px var(--color-background);
+  box-shadow: 0 0 0 5px var(--color-background), 0 0 14px var(--color-accent-glow);
   z-index: 1;
 }
 
@@ -626,7 +791,7 @@ button {
   inset: -6px;
   border-radius: 50%;
   border: 2px solid var(--color-accent-primary);
-  animation: timeline-marker-pulse 2s ease-out infinite;
+  animation: timeline-marker-pulse 2s var(--ease-out) infinite;
 }
 
 .timeline-marker--current-static::after {
@@ -649,57 +814,68 @@ button {
 }
 
 .timeline-item:nth-child(odd) .timeline-content {
-  margin-right: calc(50% + 24px);
+  margin-right: calc(50% + 28px);
 }
 
 .timeline-item:nth-child(even) .timeline-content {
-  margin-left: calc(50% + 24px);
+  margin-left: calc(50% + 28px);
 }
 
 .timeline-content {
-  background-color: var(--color-surface);
+  position: relative;
+  background-image: linear-gradient(155deg, var(--glass-fill-top), var(--glass-fill-bottom));
   border: 1px solid var(--color-border);
-  border-radius: 14px;
-  padding: 20px 24px;
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card);
+  padding: 22px 26px;
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  backdrop-filter: blur(16px) saturate(1.25);
+  box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-highlight);
+  transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.timeline-content:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-float), inset 0 1px 0 var(--glass-highlight);
 }
 
 .timeline-year-decor {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: clamp(120px, 14vw, 220px);
-  font-weight: 800;
+  font-family: var(--font-mono);
+  font-size: clamp(120px, 14vw, 210px);
+  font-weight: 600;
   line-height: 1;
   color: var(--color-text-muted);
-  opacity: 0.16;
+  opacity: 0.1;
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
 }
 
 .timeline-item:nth-child(odd) .timeline-year-decor {
-  left: calc(50% + 24px);
+  left: calc(50% + 28px);
   right: 24px;
   text-align: left;
 }
 
 .timeline-item:nth-child(even) .timeline-year-decor {
-  right: calc(50% + 24px);
+  right: calc(50% + 28px);
   left: 24px;
   text-align: right;
 }
 
 .timeline-period {
-  font-size: 13px;
-  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
   color: var(--color-accent-primary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
 }
 
 .timeline-duration {
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
@@ -707,16 +883,16 @@ button {
 }
 
 .timeline-heading {
-  margin-top: 6px;
+  margin-top: 10px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .timeline-icon {
   display: inline-flex;
-  height: 22px;
-  max-width: 60px;
+  height: 24px;
+  max-width: 64px;
   color: var(--color-accent-primary);
   flex-shrink: 0;
 }
@@ -729,51 +905,63 @@ button {
 }
 
 .timeline-company {
-  font-size: 19px;
+  font-family: var(--font-display);
+  font-size: 21px;
   font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .timeline-role {
-  margin-top: 2px;
+  margin-top: 3px;
   font-size: 14px;
   color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .timeline-summary {
-  margin-top: 12px;
+  margin-top: 14px;
   font-size: 14.5px;
-  line-height: 1.6;
+  line-height: 1.65;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
   color: var(--color-text-secondary);
 }
 
 .timeline-points {
-  margin-top: 14px;
+  margin-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
 }
 
 .timeline-points li {
   position: relative;
-  padding-left: 18px;
+  padding-left: 20px;
   font-size: 14.5px;
+  line-height: 1.55;
+  text-align: justify;
+  -webkit-hyphens: auto;
+  hyphens: auto;
   color: var(--color-text-secondary);
 }
 
 .timeline-points li::before {
   content: '';
   position: absolute;
-  left: 0;
+  left: 2px;
   top: 8px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background-color: var(--color-accent-primary);
+  box-shadow: 0 0 8px var(--color-accent-glow);
 }
 
 .timeline-tech-list {
-  margin-top: 14px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -783,12 +971,20 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
+  padding: 5px 11px;
   border-radius: 999px;
   background-color: var(--color-surface-elevated);
   border: 1px solid var(--color-border);
-  font-size: 12.5px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
   color: var(--color-text-secondary);
+  transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.timeline-tech-tag:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text-primary);
 }
 
 .timeline-tech-icon {
@@ -810,7 +1006,7 @@ button {
    ========================================================================== */
 
 .roadmap-section {
-  padding: 48px 0;
+  padding: 40px 0 48px;
 }
 
 .roadmap-inner {
@@ -822,12 +1018,16 @@ button {
 .roadmap-marquee-list {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 30px;
 }
 
 .roadmap-marquee-row {
   width: 100%;
   overflow: hidden;
+  /* Edge fades so chips dissolve into the canvas at both ends instead of
+     hard-cutting at the container edge. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 
 .roadmap-marquee-track {
@@ -871,14 +1071,19 @@ button {
 
 .roadmap-marquee-chip-icon {
   display: inline-flex;
-  width: 59px;
-  height: 59px;
-  color: var(--color-accent-primary);
+  width: 48px;
+  height: 48px;
+  color: var(--color-text-secondary);
   flex-shrink: 0;
+  transition: color 0.3s var(--ease-out);
+}
+
+.roadmap-marquee-item:hover .roadmap-marquee-chip-icon {
+  color: var(--color-accent-primary);
 }
 
 .roadmap-marquee-chip-name {
-  font-size: 23px;
+  font-size: 21px;
   font-weight: 300;
   color: var(--color-text-faint);
   white-space: nowrap;
@@ -892,8 +1097,8 @@ button {
 
 .roadmap-marquee-separator {
   margin: 0 23px;
-  color: var(--color-text-muted);
-  font-size: 25px;
+  color: var(--color-text-faint);
+  font-size: 22px;
   flex-shrink: 0;
   user-select: none;
 }
@@ -905,10 +1110,15 @@ button {
     width: 100%;
     flex-wrap: wrap;
     row-gap: 12px;
+    justify-content: center;
   }
 
   .roadmap-marquee-group[aria-hidden='true'] {
     display: none;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }
 
@@ -917,22 +1127,34 @@ button {
    ========================================================================== */
 
 .site-footer {
-  padding: 40px 0;
+  padding: 48px 0;
   text-align: center;
+  border-top: 1px solid var(--color-border);
 }
 
 .footer-contact-list {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
 .footer-contact-list .contact-link {
   padding: 8px;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color 0.2s var(--ease-out), background-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+
+.footer-contact-list .contact-link:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-elevated);
+  transform: translateY(-2px);
 }
 
 .footer-contact-list .contact-value {
@@ -940,8 +1162,10 @@ button {
 }
 
 .footer-copyright {
-  font-size: 13px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
   color: var(--color-text-muted);
+  letter-spacing: 0.02em;
 }
 
 /* ==========================================================================
@@ -951,6 +1175,13 @@ button {
 @media (max-width: 900px) {
   .section-nav {
     display: none;
+  }
+
+  /* Nav gone → center the remaining actions cluster instead of pinning it to
+     the right edge. (Narrow phones override this to full-width below 600px.) */
+  .topbar-actions {
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .experience-timeline::before {
@@ -963,7 +1194,7 @@ button {
 
   .timeline-item:nth-child(odd) .timeline-content,
   .timeline-item:nth-child(even) .timeline-content {
-    margin-left: 32px;
+    margin-left: 34px;
     margin-right: 0;
   }
 
@@ -973,12 +1204,36 @@ button {
 }
 
 @media (max-width: 600px) {
+  /* With the section nav hidden below 900px, the actions cluster is all
+     that's left in the topbar — margin-left:auto would jam it against the
+     right edge. Let it span the full row and space its members evenly. */
+  .topbar-inner {
+    justify-content: center;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .topbar-inner .contact-list {
+    gap: 2px;
+  }
+
+  .hero-section {
+    padding: 56px 0 40px;
+  }
+
   .hero-inner {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 20px;
-    padding: 0 16px;
+    gap: 24px;
+    padding: 0 20px;
   }
 
   .hero-details {
@@ -986,7 +1241,7 @@ button {
   }
 
   .hero-heading {
-    justify-content: center;
+    align-items: center;
   }
 
   .about-text {
@@ -1035,8 +1290,8 @@ button {
   }
 
   .roadmap-marquee-chip-icon {
-    width: 43px;
-    height: 43px;
+    width: 38px;
+    height: 38px;
   }
 
   .roadmap-marquee-chip-name {
@@ -1048,14 +1303,9 @@ button {
     font-size: 18px;
   }
 
-  .hero-name,
-  .hero-role {
-    font-size: 24px;
-  }
-
   .hero-avatar-wrapper {
-    width: 104px;
-    height: 104px;
+    width: 116px;
+    height: 116px;
   }
 
   .section-inner {
@@ -1063,6 +1313,6 @@ button {
   }
 
   .timeline-content {
-    padding: 16px 18px;
+    padding: 18px 20px;
   }
 }

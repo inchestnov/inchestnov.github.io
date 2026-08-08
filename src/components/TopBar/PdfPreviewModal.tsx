@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface PdfPreviewModalProps {
   dataUri: string;
@@ -16,7 +17,12 @@ export function PdfPreviewModal({ dataUri, fileName, downloadLabel, onClose }: P
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  return (
+  // Rendered through a portal to <body> rather than in place: the modal is
+  // mounted from inside .page-topbar, which sets `backdrop-filter`. Any
+  // ancestor with backdrop-filter/filter/transform becomes the containing
+  // block for `position: fixed` descendants, which would otherwise trap this
+  // fixed overlay inside the (short) topbar box instead of the viewport.
+  return createPortal(
     <div className="pdf-preview-backdrop" onClick={onClose}>
       <div className="pdf-preview-panel" onClick={(event) => event.stopPropagation()}>
         <div className="pdf-preview-header">
@@ -35,6 +41,7 @@ export function PdfPreviewModal({ dataUri, fileName, downloadLabel, onClose }: P
         </div>
         <iframe className="pdf-preview-frame" src={dataUri} title={fileName} />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

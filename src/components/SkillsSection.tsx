@@ -13,15 +13,15 @@ function SkillsSectionComponent() {
         <div className="skills-grid">
           {content.skills.rows.map((rowItems, rowIndex) => (
             <div className="skills-row" key={rowIndex}>
-              {rowItems.map((skill) => (
+              {rowItems.map((skill, skillIndex) => (
                 <motion.div
                   className="skill-card"
                   key={skill.id}
-                  initial={shouldReduceMotion ? undefined : { opacity: 0, y: 16 }}
+                  initial={shouldReduceMotion ? undefined : { opacity: 0, y: 18 }}
                   whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                  whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
+                  whileHover={shouldReduceMotion ? undefined : { y: -4 }}
                   viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: skillIndex * 0.05 }}
                 >
                   <span className="skill-icon">
                     <Icon id={skill.id} />
