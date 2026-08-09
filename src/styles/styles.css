@@ -551,14 +551,9 @@ button {
 }
 
 /* ==========================================================================
-   Main content layout (Experience + Education)
+   Main content layout — the experience bands are full-bleed (each supplies
+   its own inner max-width), so <main> is a plain full-width wrapper.
    ========================================================================== */
-
-.main-content-inner {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 40px 24px 64px;
-}
 
 .contact-list {
   margin-top: 24px;
@@ -711,70 +706,95 @@ button {
 }
 
 /* ==========================================================================
-   Experience timeline (zigzag — centered line, alternating left/right)
+   Experience — full-width "bands", one per role. Each band carries its own
+   accent gradient wash; all bands are threaded by a single continuous center
+   line (drawn as flush per-band segments in one fixed color). Content splits
+   into an identity column and a detail column around that line, alternating
+   sides band to band.
    ========================================================================== */
 
-.experience-timeline {
+.experience-bands {
   position: relative;
 }
 
-.experience-timeline::before {
+.xp-band {
+  /* --band-accent falls back to the site accent; a per-company color can be
+     supplied later via the `accent` field (inline --band-accent). */
+  --band-accent: var(--color-accent-primary);
+  --wash-x: 100%;
+  position: relative;
+  padding: 60px 0;
+  /* Full-bleed wash, kept low-alpha so the detail text keeps its contrast.
+     Bands stack flush (padding, never margin) so the line stays seamless. */
+  background-image:
+    radial-gradient(
+      110ch 80ch at var(--wash-x) 0%,
+      color-mix(in srgb, var(--band-accent) 15%, transparent),
+      transparent 58%
+    ),
+    linear-gradient(180deg, color-mix(in srgb, var(--band-accent) 5%, transparent), transparent 72%);
+}
+
+.xp-band:nth-child(even) {
+  --wash-x: 0%;
+}
+
+/* The one continuous line: a flush segment per band in a fixed color (not the
+   band accent) so all segments read as a single line. z-index:1 paints it
+   above the band's own gradient but below the content (z-index:2). */
+.xp-band::before {
   content: '';
   position: absolute;
   left: 50%;
-  top: 6px;
-  bottom: 6px;
+  top: 0;
+  bottom: 0;
   width: 2px;
   transform: translateX(-50%);
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--color-timeline-line) 8%,
-    var(--color-timeline-line) 92%,
-    transparent
-  );
+  background-color: var(--color-timeline-line);
+  z-index: 1;
 }
 
-.timeline-item {
+.xp-band:first-child::before {
+  top: 28px;
+}
+
+.xp-band:last-child::before {
+  bottom: 28px;
+}
+
+.xp-band-inner {
   position: relative;
-  margin-top: 44px;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 72px;
+  align-items: start;
 }
 
-.timeline-item:first-child {
-  margin-top: 0;
+/* Alternate the split: even bands put identity on the right (right-aligned,
+   toward the line) and detail on the left. Marker/line stay centered. */
+.xp-band:nth-child(even) .xp-identity {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
 }
 
-.timeline-item--divider {
-  margin-top: 80px;
+.xp-band:nth-child(even) .xp-detail {
+  grid-column: 1;
+  grid-row: 1;
 }
 
-.timeline-divider {
+.xp-band:nth-child(even) .xp-heading {
+  justify-content: flex-end;
+}
+
+/* Marker on the line, aligned with the identity heading. */
+.xp-marker {
   position: absolute;
-  top: -40px;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--color-text-muted);
-}
-
-.timeline-divider::before,
-.timeline-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background-color: var(--color-border);
-}
-
-.timeline-marker {
-  position: absolute;
-  top: 8px;
+  top: 4px;
   left: 50%;
   transform: translateX(-50%);
   width: 13px;
@@ -782,10 +802,10 @@ button {
   border-radius: 50%;
   background-color: var(--color-accent-primary);
   box-shadow: 0 0 0 5px var(--color-background), 0 0 14px var(--color-accent-glow);
-  z-index: 1;
+  z-index: 3;
 }
 
-.timeline-marker--current::after {
+.xp-marker--current::after {
   content: '';
   position: absolute;
   inset: -6px;
@@ -794,7 +814,7 @@ button {
   animation: timeline-marker-pulse 2s var(--ease-out) infinite;
 }
 
-.timeline-marker--current-static::after {
+.xp-marker--current-static::after {
   content: '';
   position: absolute;
   inset: -5px;
@@ -813,59 +833,151 @@ button {
   }
 }
 
-.timeline-item:nth-child(odd) .timeline-content {
-  margin-right: calc(50% + 28px);
-}
-
-.timeline-item:nth-child(even) .timeline-content {
-  margin-left: calc(50% + 28px);
-}
-
-.timeline-content {
+.xp-identity {
   position: relative;
-  background-image: linear-gradient(155deg, var(--glass-fill-top), var(--glass-fill-bottom));
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-card);
-  padding: 22px 26px;
-  -webkit-backdrop-filter: blur(16px) saturate(1.25);
-  backdrop-filter: blur(16px) saturate(1.25);
-  box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-highlight);
-  transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
 }
 
-.timeline-content:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-float), inset 0 1px 0 var(--glass-highlight);
-}
-
-.timeline-year-decor {
+/* Giant faint year watermark on the identity/outer side, behind the text
+   (z-index:-1 inside .xp-band-inner, so still above the center line). Flips to
+   the right on even bands, mirroring the split. */
+.xp-year {
   position: absolute;
+  z-index: -1;
   top: 50%;
+  left: 0;
   transform: translateY(-50%);
   font-family: var(--font-mono);
-  font-size: clamp(120px, 14vw, 210px);
+  font-size: clamp(80px, 10vw, 158px);
   font-weight: 600;
   line-height: 1;
   color: var(--color-text-muted);
-  opacity: 0.1;
+  opacity: 0.07;
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
 }
 
-.timeline-item:nth-child(odd) .timeline-year-decor {
-  left: calc(50% + 28px);
-  right: 24px;
-  text-align: left;
+.xp-band:nth-child(even) .xp-year {
+  left: auto;
+  right: 0;
 }
 
-.timeline-item:nth-child(even) .timeline-year-decor {
-  right: calc(50% + 28px);
-  left: 24px;
-  text-align: right;
+/* ==========================================================================
+   Education — a distinct closing "coda", off the work timeline: a short
+   section-break rule, an explicit "Education" label, then a frameless centered
+   text block on the page background (no card). Same display/mono language as
+   the rest of the site.
+   ========================================================================== */
+
+.education-section {
+  padding: 8px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.timeline-period {
+.education-section::before {
+  content: '';
+  width: 96px;
+  height: 1px;
+  margin-bottom: 40px;
+  background: linear-gradient(90deg, transparent, var(--color-border-strong), transparent);
+}
+
+.education-content {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.education-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-accent-primary);
+}
+
+.education-emblem {
+  display: inline-flex;
+  width: 54px;
+  height: 54px;
+  margin-top: 22px;
+  color: var(--color-accent-primary);
+  filter: drop-shadow(0 3px 12px var(--color-accent-glow));
+}
+
+.education-emblem svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.education-degree {
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.education-institution {
+  margin-top: 5px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.education-period {
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.xp-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.xp-icon {
+  display: inline-flex;
+  height: 26px;
+  max-width: 72px;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.xp-icon svg {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  display: block;
+}
+
+.xp-company {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.xp-role {
+  margin-top: 4px;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.xp-period {
+  margin-top: 8px;
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 500;
@@ -874,52 +986,15 @@ button {
   letter-spacing: 0.06em;
 }
 
-.timeline-duration {
-  font-style: normal;
+.xp-duration {
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
   color: var(--color-text-muted);
 }
 
-.timeline-heading {
-  margin-top: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.timeline-icon {
-  display: inline-flex;
-  height: 24px;
-  max-width: 64px;
-  color: var(--color-accent-primary);
-  flex-shrink: 0;
-}
-
-.timeline-icon svg {
-  height: 100%;
-  width: auto;
-  max-width: 100%;
-  display: block;
-}
-
-.timeline-company {
-  font-family: var(--font-display);
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.timeline-role {
-  margin-top: 3px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  font-weight: 500;
-}
-
-.timeline-summary {
-  margin-top: 14px;
+.xp-summary {
+  margin-top: 0;
   font-size: 14.5px;
   line-height: 1.65;
   text-align: justify;
@@ -928,14 +1003,14 @@ button {
   color: var(--color-text-secondary);
 }
 
-.timeline-points {
-  margin-top: 16px;
+.xp-points {
+  margin-top: 14px;
   display: flex;
   flex-direction: column;
   gap: 9px;
 }
 
-.timeline-points li {
+.xp-points li {
   position: relative;
   padding-left: 20px;
   font-size: 14.5px;
@@ -946,7 +1021,7 @@ button {
   color: var(--color-text-secondary);
 }
 
-.timeline-points li::before {
+.xp-points li::before {
   content: '';
   position: absolute;
   left: 2px;
@@ -958,7 +1033,7 @@ button {
   box-shadow: 0 0 8px var(--color-accent-glow);
 }
 
-.timeline-tech-list {
+.xp-tech-list {
   margin-top: 18px;
   padding-top: 16px;
   border-top: 1px solid var(--color-border);
@@ -967,7 +1042,7 @@ button {
   gap: 8px;
 }
 
-.timeline-tech-tag {
+.xp-tech-tag {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -982,12 +1057,12 @@ button {
   transition: border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
 }
 
-.timeline-tech-tag:hover {
+.xp-tech-tag:hover {
   border-color: var(--color-border-strong);
   color: var(--color-text-primary);
 }
 
-.timeline-tech-icon {
+.xp-tech-icon {
   display: inline-flex;
   width: 14px;
   height: 14px;
@@ -995,7 +1070,7 @@ button {
   flex-shrink: 0;
 }
 
-.timeline-tech-icon svg {
+.xp-tech-icon svg {
   width: 100%;
   height: 100%;
   display: block;
@@ -1184,21 +1259,31 @@ button {
     margin-right: auto;
   }
 
-  .experience-timeline::before {
-    left: 5px;
+  /* Bands collapse to a single column with the line + markers moved to a
+     fixed left rail (same idea as the old timeline's mobile mode). */
+  .xp-band::before,
+  .xp-marker {
+    left: 22px;
   }
 
-  .timeline-marker {
-    left: 5px;
+  .xp-band-inner {
+    grid-template-columns: 1fr;
+    row-gap: 18px;
+    padding-left: 54px;
+    padding-right: 24px;
   }
 
-  .timeline-item:nth-child(odd) .timeline-content,
-  .timeline-item:nth-child(even) .timeline-content {
-    margin-left: 34px;
-    margin-right: 0;
+  .xp-band:nth-child(even) .xp-identity,
+  .xp-band:nth-child(even) .xp-detail {
+    grid-column: 1;
+    text-align: left;
   }
 
-  .timeline-year-decor {
+  .xp-band:nth-child(even) .xp-heading {
+    justify-content: flex-start;
+  }
+
+  .xp-year {
     display: none;
   }
 }
@@ -1247,10 +1332,6 @@ button {
   .about-text {
     max-width: none;
     text-align: justify;
-  }
-
-  .main-content-inner {
-    padding: 24px 16px 48px;
   }
 
   .skills-banner-inner {
@@ -1312,7 +1393,30 @@ button {
     padding: 0 16px;
   }
 
-  .timeline-content {
-    padding: 18px 20px;
+  .xp-band {
+    padding: 40px 0;
+  }
+
+  .xp-band::before,
+  .xp-marker {
+    left: 16px;
+  }
+
+  .xp-band-inner {
+    padding-left: 44px;
+    padding-right: 16px;
+  }
+
+  .xp-company {
+    font-size: 21px;
+  }
+
+  .education-emblem {
+    width: 48px;
+    height: 48px;
+  }
+
+  .education-degree {
+    font-size: 19px;
   }
 }

@@ -355,19 +355,19 @@ export const iconMarkup = {
   // Sourced from testcontainers.com's own favicon.svg — not Simple Icons
   // (checked, no entry there) and not the full testcontainers-java
   // docs/logo.svg (a much larger multi-part lockup with a wordmark and
-  // gradients, not a simple recolorable mark). Like `activemq`, this is a
-  // deliberate multi-color exception rather than a `fill="currentColor"`
-  // recolor: the mark's three-facet "cube" look only reads as a 3D box
-  // because of the color contrast between faces — collapsing it to one
-  // accent-blue fill would flatten it into a plain hexagon, indistinguishable
-  // from the hand-authored `tcp-ip`/`http` frame icons already in this file.
-  // assets/icons/testcontainers.svg is the untouched reference copy.
+  // gradients, not a simple recolorable mark). Originally kept as a
+  // multi-color exception, but recolored here to `currentColor` so it reads
+  // like the rest of the tech stack (no brand hue): the three-facet "cube"
+  // stays legible via per-face `fill-opacity` (monochrome shading of the
+  // inherited color) rather than color contrast, and the original dark
+  // rounded-square plate is dropped (same plate-free treatment as the company
+  // logos). assets/icons/testcontainers.svg keeps the untouched original
+  // colors as the source-of-truth reference (like `activemq`).
   testcontainers:
     '<svg viewBox="0 0 200 200" aria-hidden="true" focusable="false" role="img">' +
-    '<path fill="#361e5b" d="M187.27,52.91c0-.11,.01-.22,.01-.33,0-.31-.03-.61-.08-.91-.26-1.48-1.17-2.79-2.5-3.56-.15-.09-.3-.16-.46-.23L102.58,.68c-1.58-.91-3.52-.91-5.1,0L15.28,48.1c-1.58,.91-2.55,2.59-2.55,4.41l-.04,94.9c0,1.82,.97,3.51,2.55,4.42l82.16,47.49c.78,.45,1.66,.68,2.55,.68h.11c.9,0,1.78-.24,2.55-.68l82.16-47.49c1.58-.91,2.55-2.6,2.55-4.42l-.04-94.5Z"></path>' +
-    '<polygon fill="#16d6c7" points="100 16 27.25 58 27.25 142 100 184 172.75 142 172.75 58 100 16"></polygon>' +
-    '<polygon fill="#027f9e" points="172.75 58 172.75 142 100 184 100 100.01 172.75 58"></polygon>' +
-    '<polygon fill="#17a6b2" points="172.75 58 100 100.01 27.25 58 100 16 172.75 58"></polygon>' +
+    '<polygon fill="currentColor" fill-opacity="0.72" points="100 16 27.25 58 27.25 142 100 184 172.75 142 172.75 58 100 16"></polygon>' +
+    '<polygon fill="currentColor" fill-opacity="0.45" points="172.75 58 172.75 142 100 184 100 100.01 172.75 58"></polygon>' +
+    '<polygon fill="currentColor" points="172.75 58 100 100.01 27.25 58 100 16 172.75 58"></polygon>' +
     '</svg>',
 
   // From Simple Icons (CC0) — see CLAUDE.md's provenance note pattern for

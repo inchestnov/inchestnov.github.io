@@ -15,9 +15,7 @@ export function App() {
       <HeroSection />
       <SkillsSection />
       <main className="main-content">
-        <div className="main-content-inner">
-          <ExperienceSection />
-        </div>
+        <ExperienceSection />
       </main>
       <RoadmapSection />
       <SiteFooter />

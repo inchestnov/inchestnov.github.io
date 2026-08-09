@@ -41,6 +41,10 @@ export interface ExperienceJob {
   points: string[];
   technologies: SkillItem[];
   icon: string;
+  /** Optional per-company accent (hex/rgb) driving that band's gradient wash.
+   *  Unset → the band falls back to the site accent. Per-company identity
+   *  colors are a deferred follow-up; the hook lands now. */
+  accent?: string;
 }
 
 export interface SectionNavItem {
