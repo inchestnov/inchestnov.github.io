@@ -47,6 +47,20 @@ export interface ExperienceJob {
   accent?: string;
 }
 
+export type ProjectMedia =
+  | { kind: 'image'; src: string; alt: string }
+  | { kind: 'code'; language: string; filename: string; code: string };
+
+export interface ProjectItem {
+  id: string;
+  name: string;
+  description: string;
+  tech: SkillItem[];
+  repoUrl: string;
+  features: string[];
+  media: ProjectMedia;
+}
+
 export interface SectionNavItem {
   href: string;
   label: string;
@@ -97,6 +111,15 @@ export interface ResumeContent {
     currentLabel: string;
   };
   education: EducationEntry;
+  projects: {
+    title: string;
+    items: ProjectItem[];
+    detail: {
+      featuresTitle: string;
+      viewOnGithubLabel: string;
+      closeLabel: string;
+    };
+  };
   roadmap: {
     title: string;
     groups: RoadmapGroup[];

@@ -1,4 +1,33 @@
 import type { ResumeContent } from '../types';
+import scautaSearchImg from '../assets/scauta-search.png';
+
+const markoYamlSnippet = `variables:
+  company_domain:
+    default: company.com
+
+collections:
+  work:
+    root: bar
+    templates:
+      - template: repository
+        vars: { username: octocat, repo_name: marko }
+    bookmarks:
+      - name: Company Wiki
+        url: "https://wiki.{{ .company_domain }}"`;
+
+const sensitiveGoSnippet = `type User struct {
+    Username string
+    Password string \`sensitive:"true"\`
+    Email    string \`sensitive:"true"\`
+}
+
+masked, secrets, err := sensitive.Detach(u)
+// masked.Password == ""  masked.Email == ""
+
+log.Printf("user: %+v", masked) // safe to log
+
+restored, err := sensitive.Attach(masked, secrets)
+// restored.Password == original value`;
 
 export const contentRu: ResumeContent = {
   meta: {
@@ -40,6 +69,7 @@ export const contentRu: ResumeContent = {
       { href: '#hero-section', label: 'Обо мне' },
       { href: '#skills-section', label: 'Навыки' },
       { href: '#experience-section', label: 'Опыт' },
+      { href: '#projects-section', label: 'Проекты' },
       { href: '#roadmap-section', label: 'Стек' }
     ]
   },
@@ -145,6 +175,82 @@ export const contentRu: ResumeContent = {
     description: [],
     icon: 'samara-university',
     dividerLabel: 'Образование'
+  },
+  projects: {
+    title: 'Пет-проекты',
+    detail: {
+      featuresTitle: 'Возможности',
+      viewOnGithubLabel: 'Открыть на GitHub',
+      closeLabel: 'Закрыть'
+    },
+    items: [
+      {
+        id: 'scauta',
+        name: 'Scauta',
+        description:
+          'Расширение для браузера с мгновенным нечётким поиском по закладкам, истории и открытым вкладкам — компактный диалог, полностью управляемый с клавиатуры и работающий локально, без сервера и синхронизации.',
+        tech: [
+          { id: 'typescript', name: 'TypeScript' },
+          { id: 'react', name: 'React' },
+          { id: 'googlechrome', name: 'Chrome Extension' }
+        ],
+        repoUrl: 'https://github.com/inchestnov/scauta',
+        features: [
+          'Нечёткий, нечувствительный к опечаткам поиск по закладкам, истории и открытым вкладкам',
+          'Многоуровневое ранжирование: точные совпадения всегда выше нечётких, часто открываемые — выше',
+          'Полностью клавиатурный интерфейс: своя горячая клавиша, стрелки, Enter',
+          'Работает целиком локально — без сервера, аккаунта и синхронизации'
+        ],
+        media: {
+          kind: 'image',
+          src: scautaSearchImg,
+          alt: 'Скриншот поиска Scauta в тёмной теме'
+        }
+      },
+      {
+        id: 'marko',
+        name: 'Marko',
+        description:
+          'Инфраструктура закладок браузера как код: описываете папки, ссылки и шаблоны в marko.yaml, а CLI на Go рендерит дерево, сравнивает его с реальными закладками браузера и применяет разницу.',
+        tech: [
+          { id: 'go', name: 'Go' },
+          { id: 'yaml', name: 'YAML' }
+        ],
+        repoUrl: 'https://github.com/inchestnov/marko',
+        features: [
+          'Закладки декларативно описываются в одном YAML-файле',
+          'Переиспользуемые шаблоны с переменными (Kubernetes, GitHub-репозитории и др.)',
+          'Режим preview показывает diff до применения к браузеру',
+          'Прямая запись в нативный файл Bookmarks с автоматическим бэкапом'
+        ],
+        media: {
+          kind: 'code',
+          language: 'yaml',
+          filename: 'marko.yaml',
+          code: markoYamlSnippet
+        }
+      },
+      {
+        id: 'sensitive-go',
+        name: 'sensitive-go',
+        description:
+          'Библиотека на Go без внешних зависимостей для маскирования и восстановления чувствительных полей структур на дженериках — «отсоединяйте» секреты перед логированием и восстанавливайте их обратно, когда они снова нужны.',
+        tech: [{ id: 'go', name: 'Go' }],
+        repoUrl: 'https://github.com/inchestnov/sensitive-go',
+        features: [
+          'Detach/Attach маскируют и восстанавливают помеченные поля структуры',
+          'API на дженериках типобезопасен — несовпадение форм возвращает ошибку, а не reflect-панику',
+          'Рекурсивная обработка вложенных структур, срезов и map',
+          'Ноль внешних зависимостей, только стандартная библиотека'
+        ],
+        media: {
+          kind: 'code',
+          language: 'go',
+          filename: 'main.go',
+          code: sensitiveGoSnippet
+        }
+      }
+    ]
   },
   roadmap: {
     title: 'Технологии',

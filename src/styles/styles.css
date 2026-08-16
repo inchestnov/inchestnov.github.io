@@ -1077,6 +1077,381 @@ button {
 }
 
 /* ==========================================================================
+   Projects (pet-project cards, between the Experience timeline and the
+   Roadmap tech-stack band). Cards are static for now (no per-project detail
+   page yet) but styled to read as clickable: hover lift, glowing border, and
+   a corner arrow that nudges toward the top-right on hover.
+   ========================================================================== */
+
+.projects-section {
+  padding: 40px 0 48px;
+}
+
+.projects-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  position: relative;
+  padding: 28px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card), inset 0 1px 0 var(--glass-highlight);
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+}
+
+.project-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-float), inset 0 1px 0 var(--glass-highlight), 0 0 0 1px var(--color-accent-soft);
+}
+
+.project-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.project-card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.project-card-badge-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
+
+.project-card-badge-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.project-card-name {
+  flex: 1;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.project-card-arrow {
+  color: var(--color-text-faint);
+  font-size: 18px;
+  line-height: 1;
+  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.project-card:hover .project-card-arrow {
+  color: var(--color-accent-primary);
+  transform: translate(3px, -3px);
+}
+
+.project-card-description {
+  margin-top: 14px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.project-tech-list {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-tech-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.project-tech-icon {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+.project-tech-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
+   Project detail modal — a single generic template reused for every
+   project, portal-rendered like the PDF preview modal (see its own comment
+   for why: `.glass`'s backdrop-filter would otherwise trap this fixed
+   overlay inside a scrolled-past ancestor).
+   ========================================================================== */
+
+.project-detail-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background-color: rgba(6, 8, 12, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.project-detail-panel {
+  width: 100%;
+  max-width: 1040px;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float), inset 0 1px 0 var(--glass-highlight);
+  overflow: hidden;
+}
+
+.project-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.project-detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.project-detail-name {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.project-detail-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+
+.project-detail-close:hover {
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+}
+
+/* The one internal-scroll safety net in this component: header/footer chrome
+   stay pinned, and only this region grows a scrollbar if content ever
+   overflows a short viewport (same fallback spirit as .pdf-preview-panel's
+   own max-height/overflow pairing). */
+.project-detail-body {
+  display: grid;
+  grid-template-columns: 0.85fr 1fr;
+  gap: 32px;
+  padding: 28px 24px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.project-detail-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.project-detail-description {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.project-detail-features-title {
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.project-detail-features {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.project-detail-features li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.project-detail-features li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-accent-primary);
+  box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+.project-detail-info .project-tech-list {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+.project-detail-media {
+  min-width: 0;
+}
+
+.project-detail-media-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.project-detail-media-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.project-detail-code {
+  height: 100%;
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-solid);
+}
+
+.project-detail-code-tab {
+  flex-shrink: 0;
+  padding: 9px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.project-detail-code-content {
+  flex: 1;
+  margin: 0;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+}
+
+.project-detail-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.project-detail-repo-path {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-detail-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background-color: var(--color-accent-primary);
+  color: var(--color-accent-contrast);
+  font-size: 13.5px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: background-color 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+
+.project-detail-cta:hover {
+  background-color: var(--color-accent-primary-hover);
+  transform: translateY(-1px);
+}
+
+.project-detail-cta-icon {
+  display: inline-flex;
+  width: 15px;
+  height: 15px;
+}
+
+.project-detail-cta-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==========================================================================
    Roadmap (full-width tech-stack marquee between main content and footer)
    ========================================================================== */
 
@@ -1286,6 +1661,18 @@ button {
   .xp-year {
     display: none;
   }
+
+  .project-detail-body {
+    grid-template-columns: 1fr;
+  }
+
+  .project-detail-media-frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .project-detail-code {
+    min-height: 200px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -1418,5 +1805,29 @@ button {
 
   .education-degree {
     font-size: 19px;
+  }
+
+  .project-detail-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .project-detail-panel {
+    max-height: 92vh;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+
+  .project-detail-body {
+    padding: 20px;
+  }
+
+  .project-detail-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .project-detail-cta {
+    justify-content: center;
   }
 }

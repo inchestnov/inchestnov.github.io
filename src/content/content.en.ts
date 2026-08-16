@@ -1,4 +1,33 @@
 import type { ResumeContent } from '../types';
+import scautaSearchImg from '../assets/scauta-search.png';
+
+const markoYamlSnippet = `variables:
+  company_domain:
+    default: company.com
+
+collections:
+  work:
+    root: bar
+    templates:
+      - template: repository
+        vars: { username: octocat, repo_name: marko }
+    bookmarks:
+      - name: Company Wiki
+        url: "https://wiki.{{ .company_domain }}"`;
+
+const sensitiveGoSnippet = `type User struct {
+    Username string
+    Password string \`sensitive:"true"\`
+    Email    string \`sensitive:"true"\`
+}
+
+masked, secrets, err := sensitive.Detach(u)
+// masked.Password == ""  masked.Email == ""
+
+log.Printf("user: %+v", masked) // safe to log
+
+restored, err := sensitive.Attach(masked, secrets)
+// restored.Password == original value`;
 
 export const contentEn: ResumeContent = {
   meta: {
@@ -40,6 +69,7 @@ export const contentEn: ResumeContent = {
       { href: '#hero-section', label: 'About' },
       { href: '#skills-section', label: 'Skills' },
       { href: '#experience-section', label: 'Experience' },
+      { href: '#projects-section', label: 'Projects' },
       { href: '#roadmap-section', label: 'Stack' }
     ]
   },
@@ -145,6 +175,82 @@ export const contentEn: ResumeContent = {
     description: [],
     icon: 'samara-university',
     dividerLabel: 'Education'
+  },
+  projects: {
+    title: 'Side Projects',
+    detail: {
+      featuresTitle: 'Features',
+      viewOnGithubLabel: 'View on GitHub',
+      closeLabel: 'Close'
+    },
+    items: [
+      {
+        id: 'scauta',
+        name: 'Scauta',
+        description:
+          'A browser extension with instant fuzzy search over bookmarks, history, and open tabs — a compact, keyboard-only dialog that runs fully locally, with no server or sync service.',
+        tech: [
+          { id: 'typescript', name: 'TypeScript' },
+          { id: 'react', name: 'React' },
+          { id: 'googlechrome', name: 'Chrome Extension' }
+        ],
+        repoUrl: 'https://github.com/inchestnov/scauta',
+        features: [
+          'Fuzzy, typo-tolerant search across bookmarks, history, and open tabs',
+          'Tiered ranking — exact matches always outrank fuzzy ones, frequently opened pages rank higher',
+          'Fully keyboard-driven: a global shortcut, arrow-key navigation, Enter to open',
+          'Runs entirely locally — no server, account, or sync service'
+        ],
+        media: {
+          kind: 'image',
+          src: scautaSearchImg,
+          alt: "Screenshot of Scauta's search dialog in dark theme"
+        }
+      },
+      {
+        id: 'marko',
+        name: 'Marko',
+        description:
+          'Bookmark infrastructure as code: describe folders, links, and templates in a marko.yaml file, and a Go CLI renders the tree, diffs it against the browser’s actual bookmarks, and applies the difference.',
+        tech: [
+          { id: 'go', name: 'Go' },
+          { id: 'yaml', name: 'YAML' }
+        ],
+        repoUrl: 'https://github.com/inchestnov/marko',
+        features: [
+          'Bookmarks declared as code in a single marko.yaml file',
+          'Reusable templates with variables (Kubernetes, GitHub repos, and more)',
+          'Preview mode shows the diff before anything touches the browser',
+          "Writes directly to the browser's native Bookmarks file, with timestamped backups"
+        ],
+        media: {
+          kind: 'code',
+          language: 'yaml',
+          filename: 'marko.yaml',
+          code: markoYamlSnippet
+        }
+      },
+      {
+        id: 'sensitive-go',
+        name: 'sensitive-go',
+        description:
+          'A tiny, zero-dependency Go library for masking and restoring sensitive struct fields via generics — detach secrets before they hit a log, database, or response, then attach them back when you actually need the real value.',
+        tech: [{ id: 'go', name: 'Go' }],
+        repoUrl: 'https://github.com/inchestnov/sensitive-go',
+        features: [
+          'Detach/Attach mask and restore struct fields tagged sensitive',
+          'Generics-based, type-safe API — a shape mismatch returns an error, never a reflect panic',
+          'Recursive — nested structs, slices, and maps are all walked and masked',
+          'Zero dependencies beyond the Go standard library'
+        ],
+        media: {
+          kind: 'code',
+          language: 'go',
+          filename: 'main.go',
+          code: sensitiveGoSnippet
+        }
+      }
+    ]
   },
   roadmap: {
     title: 'Technology Stack',
