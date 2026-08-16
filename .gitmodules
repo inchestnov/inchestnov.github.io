@@ -1,9 +1,9 @@
 [submodule "scauta"]
-	path = scauta
+	path = projects/scauta
 	url = https://github.com/inchestnov/scauta.git
 [submodule "marko"]
-	path = marko
+	path = projects/marko
 	url = https://github.com/inchestnov/marko.git
 [submodule "sensitive-go"]
-	path = sensitive-go
+	path = projects/sensitive-go
 	url = https://github.com/inchestnov/sensitive-go.git
