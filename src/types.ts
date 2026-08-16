@@ -59,6 +59,9 @@ export interface ProjectItem {
   repoUrl: string;
   features: string[];
   media: ProjectMedia;
+  /** Icon lookup key for the project's own mark (e.g. an app icon or logo).
+   *  Falls back to a generic GitHub badge when absent. */
+  icon?: string;
 }
 
 export interface SectionNavItem {

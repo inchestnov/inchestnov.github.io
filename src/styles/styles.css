@@ -1144,6 +1144,31 @@ button {
   display: block;
 }
 
+/* A project's own mark (scauta, marko) — same footprint as the generic
+   GitHub badge circle above so the heading row aligns either way, but no
+   circular background: these marks carry their own plate (scauta) or are a
+   flat silhouette that reads fine directly on the glass surface (marko). */
+.project-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.project-mark-icon {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+}
+
+.project-mark-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .project-card-name {
   flex: 1;
   font-size: 19px;

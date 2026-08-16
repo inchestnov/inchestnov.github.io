@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { useLanguage } from '../../hooks/useLanguage';
 import type { ProjectItem } from '../../types';
 import { Icon } from '../Icon';
+import { ProjectMark } from './ProjectMark';
 
 interface ProjectDetailModalProps {
   project: ProjectItem;
@@ -40,9 +41,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
       <div className="project-detail-panel glass" onClick={(event) => event.stopPropagation()}>
         <div className="project-detail-header">
           <div className="project-detail-heading">
-            <span className="project-card-badge">
-              <Icon id="github" className="project-card-badge-icon" />
-            </span>
+            <ProjectMark project={project} />
             <h3 className="project-detail-name">{project.name}</h3>
           </div>
           <button type="button" className="project-detail-close" onClick={onClose} aria-label={closeLabel}>

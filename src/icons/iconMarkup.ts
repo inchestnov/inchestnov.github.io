@@ -412,6 +412,30 @@ export const iconMarkup = {
   yaml:
     '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false" role="img">' +
     '<path d="m0 .97 4.111 6.453v4.09h2.638v-4.09L11.053.969H8.214L5.58 5.125 2.965.969Zm12.093.024-4.47 10.544h2.114l.97-2.345h4.775l.804 2.345h2.26L14.255.994Zm1.133 2.225 1.463 3.87h-3.096zm3.06 9.475v10.29H24v-2.199h-5.454v-8.091zm-12.175.002v10.335h2.217v-7.129l2.32 4.792h1.746l2.4-4.96v7.295h2.127V12.696h-2.904L9.44 17.37l-2.455-4.674Z"></path>' +
+    '</svg>',
+
+  // scauta's own extension icon (extension/icons/icon.svg in the scauta
+  // repo) — a real per-project mark, not a recolorable line icon, so unlike
+  // the brand icons above it keeps its literal colors (dark rounded-square
+  // plate + green/off-white bars) rather than a currentColor wrapper, same
+  // treatment as ozon-bank/moex/haulmont for real per-company logos.
+  scauta:
+    '<svg viewBox="0 0 128 128" aria-hidden="true" focusable="false" role="img">' +
+    '<rect width="128" height="128" rx="28" fill="#1b1d22"></rect>' +
+    '<rect x="44" y="18" width="20" height="44" rx="6" fill="#34a06b"></rect>' +
+    '<rect x="64" y="66" width="20" height="44" rx="6" fill="#f4f5f6"></rect>' +
+    '</svg>',
+
+  // marko's own logo (assets/logo.svg in the marko repo) — the
+  // light-background variant (logo-dark.svg is the dark-background one).
+  // Literal colors kept for the same reason as scauta above: a real
+  // per-project mark, not a recolorable line icon. The orange arrow is the
+  // mark's own accent, not the site's blue — kept as-is rather than forced
+  // to match.
+  marko:
+    '<svg viewBox="0 0 128 128" aria-hidden="true" focusable="false" role="img">' +
+    '<path d="M30 14 H98 a6 6 0 0 1 6 6 V110 L64 82 L24 110 V20 a6 6 0 0 1 6-6 Z" fill="#18181b"></path>' +
+    '<path d="M50 50 L68 64 L50 78" fill="none" stroke="#f5a524" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"></path>' +
     '</svg>'
 } as const satisfies Record<string, string>;
 

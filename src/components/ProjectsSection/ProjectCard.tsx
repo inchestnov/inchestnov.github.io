@@ -2,6 +2,7 @@ import type { KeyboardEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import type { ProjectItem } from '../../types';
 import { Icon } from '../Icon';
+import { ProjectMark } from './ProjectMark';
 
 interface ProjectCardProps {
   project: ProjectItem;
@@ -34,9 +35,7 @@ export function ProjectCard({ project, index, onOpen }: ProjectCardProps) {
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
     >
       <div className="project-card-heading">
-        <span className="project-card-badge">
-          <Icon id="github" className="project-card-badge-icon" />
-        </span>
+        <ProjectMark project={project} />
         <h3 className="project-card-name">{project.name}</h3>
         <span className="project-card-arrow" aria-hidden="true">
           ↗

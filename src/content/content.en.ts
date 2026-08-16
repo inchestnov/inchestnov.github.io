@@ -186,6 +186,7 @@ export const contentEn: ResumeContent = {
     items: [
       {
         id: 'scauta',
+        icon: 'scauta',
         name: 'Scauta',
         description:
           'A browser extension with instant fuzzy search over bookmarks, history, and open tabs — a compact, keyboard-only dialog that runs fully locally, with no server or sync service.',
@@ -209,6 +210,7 @@ export const contentEn: ResumeContent = {
       },
       {
         id: 'marko',
+        icon: 'marko',
         name: 'Marko',
         description:
           'Bookmark infrastructure as code: describe folders, links, and templates in a marko.yaml file, and a Go CLI renders the tree, diffs it against the browser’s actual bookmarks, and applies the difference.',
