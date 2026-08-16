@@ -1093,6 +1093,21 @@ button {
   padding: 0 24px;
 }
 
+/* Same eyebrow-label recipe as .education-label just above this section in
+   the page (mono, uppercase, tracked, accent color) — left-aligned instead
+   of centered since this section is a grid, not a single centered block.
+   Marks the Education → Projects boundary without a real heading or a
+   section background, matching the rest of the page's conventions. */
+.projects-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--color-accent-primary);
+  margin-bottom: 20px;
+}
+
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

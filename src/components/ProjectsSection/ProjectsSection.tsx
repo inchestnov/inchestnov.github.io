@@ -12,6 +12,7 @@ function ProjectsSectionComponent() {
   return (
     <section className="projects-section" id="projects-section" aria-label={title}>
       <div className="projects-inner">
+        <p className="projects-label">{title}</p>
         <div className="project-grid">
           {items.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} onOpen={() => setSelected(project)} />
