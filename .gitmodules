@@ -1,0 +1,9 @@
+[submodule "scauta"]
+	path = scauta
+	url = https://github.com/inchestnov/scauta.git
+[submodule "marko"]
+	path = marko
+	url = https://github.com/inchestnov/marko.git
+[submodule "sensitive-go"]
+	path = sensitive-go
+	url = https://github.com/inchestnov/sensitive-go.git
