@@ -192,8 +192,7 @@ export const contentEn: ResumeContent = {
           'A browser extension with instant fuzzy search over bookmarks, history, and open tabs — a compact, keyboard-only dialog that runs fully locally, with no server or sync service.',
         tech: [
           { id: 'typescript', name: 'TypeScript' },
-          { id: 'react', name: 'React' },
-          { id: 'googlechrome', name: 'Chrome Extension' }
+          { id: 'react', name: 'React' }
         ],
         repoUrl: 'https://github.com/inchestnov/scauta',
         features: [

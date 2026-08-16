@@ -1187,8 +1187,13 @@ button {
   transform: translate(3px, -3px);
 }
 
+/* Fixed to the longest description currently in play (~7 lines at this
+   card width, in either language) so the tech-tag row below lines up at
+   the same height across all cards regardless of how long each project's
+   own description happens to be. */
 .project-card-description {
   margin-top: 14px;
+  min-height: 168px;
   font-size: 14.5px;
   line-height: 1.65;
   color: var(--color-text-secondary);

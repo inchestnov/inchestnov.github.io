@@ -192,8 +192,7 @@ export const contentRu: ResumeContent = {
           'Расширение для браузера с мгновенным нечётким поиском по закладкам, истории и открытым вкладкам — компактный диалог, полностью управляемый с клавиатуры и работающий локально, без сервера и синхронизации.',
         tech: [
           { id: 'typescript', name: 'TypeScript' },
-          { id: 'react', name: 'React' },
-          { id: 'googlechrome', name: 'Chrome Extension' }
+          { id: 'react', name: 'React' }
         ],
         repoUrl: 'https://github.com/inchestnov/scauta',
         features: [
