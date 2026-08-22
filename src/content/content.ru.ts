@@ -1,20 +1,31 @@
 import type { ResumeContent } from '../types';
 import scautaSearchImg from '../assets/scauta-search.png';
 
-const openerYamlSnippet = `aliases:
-  code:
-    command: code
-  preview:
-    app: Preview
+const openerTerminalSnippet = `$ cat ~/.opener.yaml
+aliases:
+  ide:
+    command: nvim
 
 open:
   directory:
-    app: Finder
+    app: iTerm
   patterns:
     - pattern: "*.pdf"
-      app: Preview
+      app: Google Chrome
     - pattern: "*.go"
-      cmd: "code --goto"`;
+      cmd: "vim"
+
+$ opener report.pdf
+→ Google Chrome (pattern: *.pdf)
+
+$ opener main.go
+→ vim (pattern: *.go)
+
+$ opener ~/Downloads
+→ iTerm (directory)
+
+$ opener ide ~/go/projects/opener
+→ nvim ~/go/projects/opener (alias)`;
 
 const markoYamlSnippet = `variables:
   company_domain:
@@ -237,9 +248,9 @@ export const contentRu: ResumeContent = {
         ],
         media: {
           kind: 'code',
-          language: 'yaml',
-          filename: '.opener.yaml',
-          code: openerYamlSnippet
+          language: 'sh',
+          filename: 'terminal',
+          code: openerTerminalSnippet
         }
       },
       {
