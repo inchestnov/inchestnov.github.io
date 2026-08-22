@@ -1109,17 +1109,24 @@ button {
 }
 
 .project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  padding: 8px 4px 24px;
+  margin: -8px -4px -24px;
 }
 
 .project-card {
   position: relative;
+  flex: 0 0 320px;
+  width: 320px;
   padding: 28px;
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card), inset 0 1px 0 var(--glass-highlight);
   cursor: pointer;
+  scroll-snap-align: start;
   transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
 }
 

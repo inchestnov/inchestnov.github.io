@@ -1,6 +1,21 @@
 import type { ResumeContent } from '../types';
 import scautaSearchImg from '../assets/scauta-search.png';
 
+const openerYamlSnippet = `aliases:
+  code:
+    command: code
+  preview:
+    app: Preview
+
+open:
+  directory:
+    app: Finder
+  patterns:
+    - pattern: "*.pdf"
+      app: Preview
+    - pattern: "*.go"
+      cmd: "code --goto"`;
+
 const markoYamlSnippet = `variables:
   company_domain:
     default: company.com
@@ -205,6 +220,26 @@ export const contentRu: ResumeContent = {
           kind: 'image',
           src: scautaSearchImg,
           alt: 'Скриншот поиска Scauta в тёмной теме'
+        }
+      },
+      {
+        id: 'opener',
+        name: 'opener',
+        description:
+          'CLI-утилита для macOS, дающая единый интерфейс для открытия файлов, папок и приложений — тонкая обёртка над системной командой `open` и Launch Services, поверх которой настраиваются именованные алиасы и правила по паттернам.',
+        tech: [{ id: 'go', name: 'Go' }],
+        repoUrl: 'https://github.com/inchestnov/opener',
+        features: [
+          '`opener <target>` по умолчанию открывает файлы, папки и приложения через системную команду open',
+          'Именованные алиасы направляют цель на конкретную CLI-программу или приложение macOS через Launch Services',
+          'Правила по паттернам сопоставляют файлы по расширению или glob-маске в заданном порядке',
+          'Файл ~/.opener.yaml полностью опционален — без него утилита ведёт себя как обычный open'
+        ],
+        media: {
+          kind: 'code',
+          language: 'yaml',
+          filename: '.opener.yaml',
+          code: openerYamlSnippet
         }
       },
       {
